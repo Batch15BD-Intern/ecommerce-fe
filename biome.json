@@ -9,6 +9,16 @@
 			"recommended": true,
 			"style": {
 				"noUnusedTemplateLiteral": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
+			},
+			"complexity": {
+				"noBannedTypes": "off"
+			},
+			"performance": {},
+			"a11y": {
+				"useButtonType": "off"
 			}
 		}
 	},
