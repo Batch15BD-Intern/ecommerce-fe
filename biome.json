@@ -11,14 +11,16 @@
 				"noUnusedTemplateLiteral": "off"
 			},
 			"suspicious": {
-				"noExplicitAny": "off"
+				"noExplicitAny": "off",
+				"noArrayIndexKey": "off"
 			},
 			"complexity": {
 				"noBannedTypes": "off"
 			},
 			"performance": {},
 			"a11y": {
-				"useButtonType": "off"
+				"useButtonType": "off",
+				"useValidAnchor": "off"
 			}
 		}
 	},
