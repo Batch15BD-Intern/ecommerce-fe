@@ -21,8 +21,8 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${inter.className} bg-gray-100`}>
+				<Navbar icon={""} facebook={"https://www.facebook.com/hoang3409"} instagram={"https://www.instagram.com/?hl=en"} />
 				<div className="max-w-[1200px] m-auto">
-					<Navbar />
 					{children}
 					<Footer />
 				</div>
