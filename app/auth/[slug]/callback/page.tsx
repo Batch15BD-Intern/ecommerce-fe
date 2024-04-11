@@ -1,6 +1,6 @@
 "use client";
 
-import { URL_API } from "@/app/layout";
+import { URL_API } from "@/app/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
