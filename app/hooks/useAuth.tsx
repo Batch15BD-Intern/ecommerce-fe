@@ -1,5 +1,8 @@
+"use client";
+
 import { create } from "zustand";
 import type { User } from "../types";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 type AuthStore = {
 	jwt: string;
@@ -8,9 +11,23 @@ type AuthStore = {
 	logout: () => void;
 };
 
+const getJwt = () => {
+	if (typeof window === "undefined") return "";
+	return localStorage.getItem("jwt") ?? "";
+};
+
+const getUser = () => {
+	if (typeof window === "undefined") return "";
+	const userItem = localStorage.getItem("user");
+	if (userItem !== null) {
+		return JSON.parse(userItem);
+	}
+	return undefined;
+};
+
 export const useAuth = create<AuthStore>((set) => ({
-	jwt: localStorage.getItem("jwt") ?? "",
-	user: JSON.parse(localStorage.getItem("user") ?? ""),
+	jwt: getJwt(),
+	user: getUser(),
 	save_token: (_jwt: string, _user: User) => {
 		localStorage.setItem("jwt", _jwt);
 		localStorage.setItem("user", JSON.stringify(_user));

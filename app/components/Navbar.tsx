@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CgShoppingCart } from "react-icons/cg";
 import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
@@ -17,6 +17,11 @@ type NavbarProps = {
 export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 	const { user, logout } = useAuth();
 	const [search, setSearch] = useState<string>("");
+	const [isClient, setIsClient] = useState(false);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
 
 	return (
 		<div className="top-0 w-full h-[50] bg-gradient-to-r from-[#f53d2d] to-[#f63] z-100 flex flex-col items-center">
@@ -41,7 +46,7 @@ export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 					<div>Hỗ Trợ</div>
 					<div>Ngôn ngữ</div>
 					<div>
-						{user ? (
+						{isClient && user ? (
 							<div onClick={logout}>{user.username}</div>
 						) : (
 							<Link href={"/auth"}>Username</Link>
@@ -49,7 +54,7 @@ export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 					</div>
 				</div>
 			</div>
-			<div className="w-[1200px] py-[16px] flex justify-between items-center">
+			<div className="w-[1200px] py-[16px] flex justify-around items-center">
 				<Link href={"/"}>
 					<Image
 						className="dark:invert"

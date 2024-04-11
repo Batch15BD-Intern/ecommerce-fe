@@ -1,19 +1,28 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import Button from "../components/Button";
-import { type ResponseAuth, URL_API } from "../types";
+import { URL_API } from "../types";
 import { useAuth } from "../hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 export default function AuthPage() {
+	const { user } = useAuth();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const { save_token } = useAuth();
+	const route = useRouter();
+
+	useEffect(() => {
+		if (user) {
+			route.push("/");
+		}
+	});
 
 	const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const response: ResponseAuth = await fetch(`${URL_API}/api/auth/local`, {
+		const response = await fetch(`${URL_API}/api/auth/local`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -22,9 +31,15 @@ export default function AuthPage() {
 				identifier: email,
 				password: password,
 			}),
-		}).then((res) => res.json());
-
-		save_token(response.jwt, response.user);
+		})
+			.then((res) => res.json())
+			.then((res) => {
+				if (res.error) {
+					alert(res.error.message);
+					return;
+				}
+				save_token(res.jwt, res.user);
+			});
 	};
 
 	return (

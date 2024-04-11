@@ -5,6 +5,16 @@ export type ResponseAuth = {
 	user: User;
 };
 
+export type ResponseError = {
+	data: string;
+	error: {
+		status: number;
+		name: string;
+		message: string;
+		details: {};
+	};
+};
+
 export type User = {
 	id: number;
 	username: string;
