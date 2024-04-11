@@ -4,8 +4,8 @@ import Image from 'next/image';
 const Navbar = () => {
   return (
     <div className="flex justify-between items-center bg-orange-800 text-white py-4 px-6">
-      <div className="logo">
-        <Image src="/shopee-logo.png" alt="Shopee" width={100} height={50} />
+      <div className="logo text-white">
+        <Image className='dark:invert' src={'logo.svg'} alt="Shopee" width={100} height={50} />
       </div>
       <div className="search-bar">
         <input

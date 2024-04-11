@@ -1,53 +1,58 @@
-// Button.tsx
-import React, { ReactNode } from 'react';
+'use client';
 
-type ButtonProps = {
-  color?: string;
-  icon?: ReactNode;
-  onClick?: () => void;
-  highlight?: boolean;
-  borderColor?: string;
-  borderHighlightColor?: string;
-  backgroundColor?: string;
-  children: ReactNode;
-};
+import type { IconType } from "react-icons";
+import type React from "react";
 
-const Button = ({
-  color = '#2c59ff',
-  icon,
-  onClick,
-  highlight = false,
-  borderColor = '#2c59ff',
-  borderHighlightColor = '#1e90ff',
-  backgroundColor = '#2c59ff',
-  children,
-}: ButtonProps) => {
-  const handleButtonClick = () => {
-    if (onClick) {
-      onClick();
-    }
-  };
+interface ButtonProps {
+    label: string;
+    onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    disabled?: boolean;
+    outline?: boolean;
+    small?: boolean;
+    icon?: IconType;
+}
 
-  return (
-    <button
-      style={{
-        background: highlight ? backgroundColor : color,
-        color: '#ffffff',
-        padding: '8px 16px',
-        borderRadius: '4px',
-        border: `2px solid ${highlight ? borderHighlightColor : borderColor}`,
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'background-color 0.3s, border-color 0.3s',
-      }}
-      onClick={handleButtonClick}
-    >
-      {icon && <span style={{ marginRight: '8px' }}>{icon}</span>}
-      {children}
-    </button>
-  );
-};
+const Button: React.FC<ButtonProps> = ({
+    label,
+    onClick,
+    disabled,
+    outline,
+    small,
+    icon: Icon,
+}) => {
+    return (
+        <button
+            disabled={disabled}
+            onClick={onClick}
+            className={`
+        relative
+        disabled:opacity-70
+        disabled:cursor-not-allowed
+        rounded-[2px]
+        hover:opacity-80
+        hover:shadow-md
+        focus:outline-none
+        active:shadow-xs
+        transition
+        w-full
+        ${outline ? 'bg-white' : 'bg-[#fb5533]'}
+        ${outline ? 'border-[#ee4d2d]' : 'border-[#fb5533]'}
+        ${outline ? 'text-[#ee4d2d]' : 'text-white'}
+        ${small ? 'text-sm' : 'text-md'}
+        ${small ? 'py-1' : 'py-3'}
+        ${small ? 'font-light' : 'font-semibold'}
+        ${small ? 'border-[1px]' : 'border-2'}
+      `}
+        >
+            {Icon && (
+                <Icon
+                    size={24}
+                    className="absolute left-4 top-3"
+                />
+            )}
+            {label}
+        </button>
+    );
+}
 
 export default Button;
