@@ -6,7 +6,8 @@ import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
+import Logo from "../Logo";
 
 type NavbarProps = {
 	icon: string;
@@ -49,21 +50,19 @@ export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 						{isClient && user ? (
 							<div onClick={logout}>{user.username}</div>
 						) : (
-							<Link href={"/auth"}>Username</Link>
+							<div className="flex gap-2">
+								<Link href={"/auth"}>Đăng ký</Link>
+								<div>|</div>
+								<Link href={"/auth"}>Đăng nhập</Link>
+							</div>
 						)}
 					</div>
 				</div>
 			</div>
 			<div className="w-[1200px] py-[16px] flex justify-around items-center">
-				<Link href={"/"}>
-					<Image
-						className="dark:invert"
-						src={"/logo.svg"}
-						alt="Shopee"
-						width={150}
-						height={40}
-					/>
-				</Link>
+				<div className="h-[65px] w-[192px]">
+					<Logo fill="white" />
+				</div>
 				<div className="w-[840px]">
 					<div className="px-[0.625rem] bg-white flex py-[7px]">
 						<input
