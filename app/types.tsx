@@ -95,7 +95,9 @@ export type Product = {
 		physical_product: boolean;
 		category: Category;
 		brand: Brand;
-		product_items: ProductsItemsPrice;
+		product_items: {
+			data: ProductItems[];
+		};
 		image: {
 			data: Image;
 		};
@@ -120,17 +122,6 @@ export type Brand = {
 			name: string;
 		};
 	};
-};
-
-export type ProductsItemsPrice = {
-	data: [
-		{
-			id: number;
-			attributes: {
-				price: number;
-			};
-		},
-	];
 };
 
 export type Image = {

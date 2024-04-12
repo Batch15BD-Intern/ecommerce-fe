@@ -4,17 +4,22 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/thumbs";
-import { useState } from "react";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import CarouselThumbs from "./CarouselThumbs";
 import ProductImage from "./ProductImage";
 import type { Gallery, ResponseProductDetails } from "@/app/types";
 
 interface ProductGalleryProps {
 	product: ResponseProductDetails;
+	thumbsSwiper: any;
+	setThumbsSwiper: Dispatch<SetStateAction<null>>;
 }
 
-export default function ProductGallery({ product }: ProductGalleryProps) {
-	const [thumbsSwiper, setThumbsSwiper] = useState(null);
+export default function ProductGallery({
+	product,
+	thumbsSwiper,
+	setThumbsSwiper,
+}: ProductGalleryProps) {
 	const galleryItems = [
 		{
 			id: product.data.attributes.image.data.id,

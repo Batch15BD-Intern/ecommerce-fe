@@ -1,5 +1,5 @@
 import getProductDetails from "@/app/actions/getProductDetails";
-import ProductGallery from "@/app/components/product/ProductGallery";
+import ProductDetailsClient from "./ProductDetailsClient";
 
 type Props = {
 	params: {
@@ -12,16 +12,17 @@ export default async function ProductDetailPage({ params }: Props) {
 
 	return (
 		<div>
-			<div className="bg-white">
-				<div className="flex">
-					<div className="w-[450px]">
-						<ProductGallery product={product} />
-					</div>
-					<div>
-						<h1>{product.data.attributes.name}</h1>
-					</div>
+			<div className="bg-white mt-[1.265rem] pt-[1.265rem]">
+				<ProductDetailsClient product={product} />
+				<div className="flex gap-4">
+					<div
+						className="w-2/3 p-2"
+						dangerouslySetInnerHTML={{
+							__html: product.data.attributes.description,
+						}}
+					/>
+					<div></div>
 				</div>
-				<div></div>
 			</div>
 		</div>
 	);
