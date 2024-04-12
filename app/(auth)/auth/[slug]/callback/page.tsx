@@ -1,25 +1,8 @@
 "use client";
 
-import { URL_API } from "@/app/types";
+import { URL_API, type User, type GetAccessTokenResponse } from "@/app/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-type GetAccessTokenResponse = {
-	jwt: string;
-	user: User;
-};
-
-type User = {
-	id: number;
-	username: string;
-	email: string;
-	provider: string;
-	confirmed: boolean;
-	blocked: boolean;
-	createdAt: string;
-	updatedAt: string;
-	phone: string | null;
-};
 
 export default function AuthCallback() {
 	const router = useSearchParams();

@@ -24,6 +24,9 @@
 				"useValidAnchor": "off",
 				"useKeyWithClickEvents": "off",
 				"noSvgWithoutTitle": "off"
+			},
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
 			}
 		}
 	},

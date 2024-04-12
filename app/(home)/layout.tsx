@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/Footer";
 import { poppins } from "../fonts";
+import React, {type ReactNode} from "react";
 
 export const metadata: Metadata = {
 	title: "Home",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
 	children,
 }: Readonly<{
-	children: React.ReactNode;
+	children: ReactNode;
 }>) {
 	return (
 		<html lang="en">

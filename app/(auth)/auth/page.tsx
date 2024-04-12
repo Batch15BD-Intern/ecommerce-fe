@@ -1,6 +1,6 @@
 "use client";
 
-import { MouseEvent, useEffect, useState, type FormEvent } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import Button from "../../components/Button";
 import { URL_API } from "../../types";
 import { useAuth } from "../../hooks/useAuth";
@@ -25,7 +25,7 @@ export default function AuthPage() {
 	const handleLogin = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		const response = await fetch(`${URL_API}/api/auth/local`, {
+		await fetch(`${URL_API}/api/auth/local`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -43,6 +43,10 @@ export default function AuthPage() {
 				}
 				save_token(res.jwt, res.user);
 			});
+	};
+
+	const handleLoginWithSocial = (provider: string) => {
+		window.open(`${URL_API}/api/connect/${provider}`, "_self");
 	};
 
 	return (
@@ -91,18 +95,18 @@ export default function AuthPage() {
 						<Button
 							icon={FcGoogle}
 							label={"Google"}
-							onClick={() => {}}
+							onClick={() => handleLoginWithSocial("google")}
 							outline
 						/>
 						<Button
 							icon={FaGithub}
 							label={"Github"}
-							onClick={() => {}}
+							onClick={() => handleLoginWithSocial("github")}
 							outline
 						/>
 					</div>
 					<div className="m-auto pb-[1.375rem] px-[30px] flex gap-1">
-						<div className="opacity-30">Bạn mới biết đến Shopee? </div>
+						<div className="opacity-30">Bạn mới biết đến Ecommerce? </div>
 						<Link className="text-[#ee4d2d]" href={"/"}>
 							Đăng ký
 						</Link>
