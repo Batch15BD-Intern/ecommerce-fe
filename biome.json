@@ -16,7 +16,8 @@
 				"noArrayIndexKey": "off"
 			},
 			"complexity": {
-				"noBannedTypes": "off"
+				"noBannedTypes": "off",
+				"noForEach": "off"
 			},
 			"performance": {},
 			"a11y": {
@@ -56,5 +57,12 @@
 		"formatter": {
 			"trailingCommas": "all"
 		}
+	},
+	"files": {
+		"ignore": [
+			"node_modules",
+			".next",
+			".idea"
+		]
 	}
 }

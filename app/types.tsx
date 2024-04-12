@@ -1,4 +1,4 @@
-export const URL_API = "https://ecommerce-be-gqhu.onrender.com";
+export const URL_API = "https://ecommerce.zeabur.app";
 
 export type ResponseAuth = {
 	jwt: string;
@@ -45,43 +45,47 @@ export type ResponseProductDetails = {
 export type ProductDetails = {
 	id: number;
 	attributes: {
+		name: string;
 		description: string;
+		attributes: object;
 		brand: Brand;
 		category: Category;
-		product_items: ProductItems;
+		image: {
+			data: Image;
+		};
+		product_items: {
+			data: ProductItems[];
+		};
 	};
 };
 
 export type ProductItems = {
-	data: [
-		{
-			id: number;
-			attributes: {
-				price: number;
-				quantity: number;
-				product_config: ProductConfig;
-			};
-		},
-	];
+	id: number;
+	attributes: {
+		price: number;
+		quantity: number;
+		image: {
+			data: Image[];
+		};
+		product_config: {
+			data: ProductConfig[];
+		};
+	};
 };
 
 export type ProductConfig = {
-	data: [
-		{
-			id: number;
-			attributes: {
-				value: string;
-				variation: {
-					data: {
-						id: number;
-						attributes: {
-							name: string;
-						};
-					};
+	id: number;
+	attributes: {
+		value: string;
+		variation: {
+			data: {
+				id: number;
+				attributes: {
+					name: string;
 				};
 			};
-		},
-	];
+		};
+	};
 };
 
 export type Product = {
@@ -92,7 +96,9 @@ export type Product = {
 		category: Category;
 		brand: Brand;
 		product_items: ProductsItemsPrice;
-		image: Image;
+		image: {
+			data: Image;
+		};
 	};
 };
 
@@ -128,16 +134,14 @@ export type ProductsItemsPrice = {
 };
 
 export type Image = {
-	data: {
-		id: number;
-		attributes: {
-			name: string;
-			url: string;
-			formats: {
-				small: ImageFormats;
-				medium: ImageFormats;
-				thumbnail: ImageFormats;
-			};
+	id: number;
+	attributes: {
+		name: string;
+		url: string;
+		formats: {
+			small: ImageFormats;
+			medium: ImageFormats;
+			thumbnail: ImageFormats;
 		};
 	};
 };
@@ -150,10 +154,17 @@ export type ImageFormats = {
 };
 
 export type Meta = {
-	pagination: {
-		page: number;
-		pageSize: number;
-		pageCount: number;
-		total: number;
-	};
+	pagination: Pagination;
+};
+
+export type Pagination = {
+	page: number;
+	pageSize: number;
+	pageCount: number;
+	total: number;
+};
+
+export type Gallery = {
+	id: number;
+	imgUrl: string;
 };
