@@ -1,13 +1,14 @@
 "use client";
 
 import { type FormEvent, useEffect, useState } from "react";
-import Button from "../../components/Button";
+import MyButton from "../../components/Button";
 import { URL_API } from "../../types";
 import { useAuth } from "../../hooks/useAuth";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { Button } from "@nextui-org/react";
 
 export default function AuthPage() {
 	const { user } = useAuth();
@@ -81,31 +82,34 @@ export default function AuthPage() {
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 						<div className="text-sm font-light">
-							<Button
-								type="submit"
+							<MyButton
+								className={`bg-[#ee4d2d] text-white w-full`}
 								label={"ĐĂNG NHẬP"}
 								onClick={() => {}}
-							></Button>
+								type="submit"
+							></MyButton>
 						</div>
 					</form>
 					<div className="text-sm font-light px-[30px] text-blue-700">
 						<Link href={"/"}>Quên mật khẩu</Link>
 					</div>
-					<div className="flex py-[1.375rem] px-[30px] gap-3">
-						<Button
-							icon={FcGoogle}
+					<div className="flex py-[1.375rem] px-[30px] gap-3 items-center justify-center">
+						<MyButton
+							className="w-full"
+							icon={<FcGoogle />}
 							label={"Google"}
 							onClick={() => handleLoginWithSocial("google")}
 							outline
 						/>
-						<Button
-							icon={FaGithub}
+						<MyButton
+							className="w-full"
+							icon={<FaGithub />}
 							label={"Github"}
 							onClick={() => handleLoginWithSocial("github")}
 							outline
 						/>
 					</div>
-					<div className="m-auto pb-[1.375rem] px-[30px] flex gap-1">
+					<div className="m-auto pb-[1.375rem] px-[30px] flex gap-1 text-sm">
 						<div className="opacity-30">Bạn mới biết đến Ecommerce? </div>
 						<Link className="text-[#ee4d2d]" href={"/"}>
 							Đăng ký

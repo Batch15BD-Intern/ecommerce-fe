@@ -1,11 +1,12 @@
 "use client";
 
-import Button from "@/app/components/Button";
+import MyButton from "@/app/components/Button";
 import ProductGallery from "@/app/components/product/ProductGallery";
 import type { ResponseProductDetails } from "@/app/types";
 import getMinMaxPrice from "@/app/utility/getMinMaxPrice";
 import { Divider } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { BsCartPlus } from "react-icons/bs";
 
 type variationOptions = {
 	id: number;
@@ -88,15 +89,29 @@ export default function ProductDetailsClient({
 				{variationOptions.map((item) => (
 					<div>
 						<div>{item.option}</div>
-						<Divider />
 						<div className="flex gap-2">
 							{item.value.map((item) => (
-								<div>{item.value}</div>
+								<MyButton label={item.value} />
 							))}
 						</div>
 					</div>
 				))}
-				<Button label="Add to cart" />
+				<div className="pt-2">
+					<div>Số lượng</div>
+					<div></div>
+				</div>
+				<div className="pt-2">
+					<MyButton
+						className="bg-[#ee4d2d] bg-opacity-10 text-[#FF5722] outline-1 outline-[#ee4d2d] m-2 text-medium"
+						label="Add to cart"
+						icon={<BsCartPlus />}
+					/>
+					<MyButton
+						className="bg-[#ee4d2d] text-white text-medium"
+						label="Add to cart"
+						icon={<BsCartPlus />}
+					/>
+				</div>
 			</div>
 		</div>
 	);

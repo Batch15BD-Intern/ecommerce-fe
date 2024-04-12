@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import Navbar from "../components/navbar/Navbar";
 import Footer from "../components/Footer";
 import { poppins } from "../fonts";
-import React, {type ReactNode} from "react";
+import React, { type ReactNode } from "react";
+import { NextUIProvider } from "@nextui-org/react";
 
 export const metadata: Metadata = {
 	title: "Home",

@@ -15,11 +15,7 @@ export default function ProductImage({
 }: ProductImageProps) {
 	return (
 		<div className="relative">
-			<Swiper
-				modules={[Navigation, Thumbs]}
-				thumbs={{ swiper: thumbsSwiper }}
-				navigation
-			>
+			<Swiper modules={[Thumbs]} thumbs={{ swiper: thumbsSwiper }}>
 				{gallery?.map((item: { id: any; imgUrl: string | StaticImport }) => (
 					<SwiperSlide
 						key={`product-gallery-${item.id}`}
