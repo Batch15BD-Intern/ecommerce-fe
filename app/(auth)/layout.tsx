@@ -1,9 +1,9 @@
-import "../globals.css";
 import type { Metadata } from "next";
-import Footer from "../components/Footer";
-import { poppins } from "../fonts";
-import SecondNavbar from "../components/navbar/SecondNavbar";
 import React, { type ReactNode } from "react";
+import Footer from "../components/Footer";
+import SecondNavbar from "../components/navbar/SecondNavbar";
+import { poppins } from "../fonts";
+import "../globals.css";
 
 export const metadata: Metadata = {
 	title: "Login to your account",

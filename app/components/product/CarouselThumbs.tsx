@@ -13,7 +13,7 @@ export default function CarouselThumbs({
 	setThumbsSwiper,
 }: CarouselThumbsProps) {
 	return (
-		<div className="max-w-md mt-5 lg:mt-8 mx-auto relative lg:pb-2">
+		<div className="relative mx-auto mt-5 max-w-md lg:mt-8 lg:pb-2">
 			<Swiper
 				onSwiper={setThumbsSwiper}
 				spaceBetween={20}
@@ -26,7 +26,10 @@ export default function CarouselThumbs({
 				{gallery?.map((item: { id: any; imgUrl: string | StaticImport }) => (
 					<SwiperSlide
 						key={`product-thumb-gallery-${item.id}`}
-						className="flex items-center justify-center cursor-pointer rounded overflow-hidden border border-border-200 border-opacity-75 hover:opacity-75"
+						className="border-border-200 flex 
+						cursor-pointer items-center justify-center 
+						overflow-hidden rounded border border-opacity-75 
+						hover:opacity-75"
 					>
 						<Image
 							src={item.imgUrl}

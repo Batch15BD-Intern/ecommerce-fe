@@ -2,7 +2,6 @@
 
 import { create } from "zustand";
 import type { User } from "../types";
-import { createJSONStorage, persist } from "zustand/middleware";
 
 type AuthStore = {
 	jwt: string;

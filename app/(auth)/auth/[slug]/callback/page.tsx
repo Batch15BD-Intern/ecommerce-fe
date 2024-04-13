@@ -1,6 +1,6 @@
 "use client";
 
-import { URL_API, type User, type GetAccessTokenResponse } from "@/app/types";
+import { type GetAccessTokenResponse, URL_API, type User } from "@/app/types";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 

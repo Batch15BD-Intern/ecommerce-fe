@@ -55,14 +55,12 @@
 	},
 	"json": {
 		"formatter": {
-			"trailingCommas": "all"
+			"trailingCommas": "none",
+			"indentStyle": "tab",
+			"indentWidth": 2
 		}
 	},
 	"files": {
-		"ignore": [
-			"node_modules",
-			".next",
-			".idea"
-		]
+		"ignore": ["node_modules", ".next", ".idea"]
 	}
 }

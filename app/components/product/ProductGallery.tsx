@@ -1,13 +1,13 @@
 "use client";
 
+import type { Gallery, ResponseProductDetails } from "@/app/types";
+import { type Dispatch, type SetStateAction, useState } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/thumbs";
-import { type Dispatch, type SetStateAction, useState } from "react";
 import CarouselThumbs from "./CarouselThumbs";
 import ProductImage from "./ProductImage";
-import type { Gallery, ResponseProductDetails } from "@/app/types";
 
 interface ProductGalleryProps {
 	product: ResponseProductDetails;

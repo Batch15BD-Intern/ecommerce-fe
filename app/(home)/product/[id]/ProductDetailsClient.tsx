@@ -4,7 +4,6 @@ import MyButton from "@/app/components/Button";
 import ProductGallery from "@/app/components/product/ProductGallery";
 import type { ResponseProductDetails } from "@/app/types";
 import getMinMaxPrice from "@/app/utility/getMinMaxPrice";
-import { Divider } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 import { BsCartPlus } from "react-icons/bs";
 
@@ -102,12 +101,12 @@ export default function ProductDetailsClient({
 				</div>
 				<div className="pt-2">
 					<MyButton
-						className="bg-[#ee4d2d] bg-opacity-10 text-[#FF5722] outline-1 outline-[#ee4d2d] m-2 text-medium"
+						className="m-2 bg-[#ee4d2d] bg-opacity-10 text-medium text-[#FF5722] outline-1 outline-[#ee4d2d]"
 						label="Add to cart"
 						icon={<BsCartPlus />}
 					/>
 					<MyButton
-						className="bg-[#ee4d2d] text-white text-medium"
+						className="bg-[#ee4d2d] text-medium text-white"
 						label="Add to cart"
 						icon={<BsCartPlus />}
 					/>

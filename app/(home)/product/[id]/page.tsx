@@ -12,7 +12,7 @@ export default async function ProductDetailPage({ params }: Props) {
 
 	return (
 		<div>
-			<div className="bg-white mt-[1.265rem] pt-[1.265rem]">
+			<div className="mt-[1.265rem] bg-white pt-[1.265rem]">
 				<ProductDetailsClient product={product} />
 				<div className="flex gap-4">
 					<div

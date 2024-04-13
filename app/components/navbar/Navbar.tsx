@@ -1,11 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CgShoppingCart } from "react-icons/cg";
 import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
-import Image from "next/image";
-import Link from "next/link";
 import { useAuth } from "../../hooks/useAuth";
 import Logo from "../Logo";
 

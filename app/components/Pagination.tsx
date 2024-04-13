@@ -1,31 +1,29 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 
 const Pagination = () => {
-  useEffect(() => {
-    handlePagination();
-  }, []);
+	useEffect(() => {
+		handlePagination();
+	}, []);
 
-  const handlePagination = () => {
-    const paginationItem = document.querySelectorAll('.pagination-item');
-    const paginationLength = paginationItem.length;
+	const handlePagination = () => {
+		const paginationItem = document.querySelectorAll(".pagination-item");
+		const paginationLength = paginationItem.length;
 
-    checkPageArrow();
+		checkPageArrow();
 
-    for (let i = 0; i < paginationLength; i++) {
-      // Your pagination logic here
-    }
-  };
+		for (let i = 0; i < paginationLength; i++) {
+			// Your pagination logic here
+		}
+	};
 
-  const checkPageArrow = () => {
-    const paginationLink = document.querySelectorAll('.pagination-item-link');
-    // Your logic for checking pagination arrow here
-  };
+	const checkPageArrow = () => {
+		const paginationLink = document.querySelectorAll(".pagination-item-link");
+		// Your logic for checking pagination arrow here
+	};
 
-  return (
-    <div className="pagination-container">
-      {/* Your pagination JSX here */}
-    </div>
-  );
+	return (
+		<div className="pagination-container">{/* Your pagination JSX here */}</div>
+	);
 };
 
 export default Pagination;

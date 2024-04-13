@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
 import type { Product } from "@/app/types";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 import getMinMaxPrice from "../utility/getMinMaxPrice";
 
 type ProductCardProps = {

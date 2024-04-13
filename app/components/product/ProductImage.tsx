@@ -1,8 +1,8 @@
-import Image from "next/image";
-import type { StaticImport } from "next/dist/shared/lib/get-img-props";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Thumbs } from "swiper/modules";
 import type { Gallery } from "@/app/types";
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
+import Image from "next/image";
+import { Navigation, Thumbs } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 interface ProductImageProps {
 	gallery: Gallery[];

@@ -1,14 +1,13 @@
 "use client";
 
-import { type FormEvent, useEffect, useState } from "react";
-import MyButton from "../../components/Button";
-import { URL_API } from "../../types";
-import { useAuth } from "../../hooks/useAuth";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/navigation";
+import { type FormEvent, useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
-import { Button } from "@nextui-org/react";
+import { FcGoogle } from "react-icons/fc";
+import MyButton from "../../components/Button";
+import { useAuth } from "../../hooks/useAuth";
+import { URL_API } from "../../types";
 
 export default function AuthPage() {
 	const { user } = useAuth();
@@ -51,11 +50,11 @@ export default function AuthPage() {
 	};
 
 	return (
-		<div className="h-[600px] flex justify-around items-center">
+		<div className="flex h-[600px] items-center justify-around">
 			<div></div>
 			<div>
-				<div className="bg-white w-[400px] rounded-lg shadow-md">
-					<div className="w-full text-2xl font-light px-[30px] pt-[30px]">
+				<div className="w-[400px] rounded-lg bg-white shadow-md">
+					<div className="w-full px-[30px] pt-[30px] text-2xl font-light">
 						Đăng nhập
 					</div>
 					<form
@@ -83,17 +82,17 @@ export default function AuthPage() {
 						/>
 						<div className="text-sm font-light">
 							<MyButton
-								className={`bg-[#ee4d2d] text-white w-full`}
+								className={`w-full bg-[#ee4d2d] text-white`}
 								label={"ĐĂNG NHẬP"}
 								onClick={() => {}}
 								type="submit"
 							></MyButton>
 						</div>
 					</form>
-					<div className="text-sm font-light px-[30px] text-blue-700">
+					<div className="px-[30px] text-sm font-light text-blue-700">
 						<Link href={"/"}>Quên mật khẩu</Link>
 					</div>
-					<div className="flex py-[1.375rem] px-[30px] gap-3 items-center justify-center">
+					<div className="flex items-center justify-center gap-3 px-[30px] py-[1.375rem]">
 						<MyButton
 							className="w-full"
 							icon={<FcGoogle />}
@@ -109,7 +108,7 @@ export default function AuthPage() {
 							outline
 						/>
 					</div>
-					<div className="m-auto pb-[1.375rem] px-[30px] flex gap-1 text-sm">
+					<div className="m-auto flex gap-1 px-[30px] pb-[1.375rem] text-sm">
 						<div className="opacity-30">Bạn mới biết đến Ecommerce? </div>
 						<Link className="text-[#ee4d2d]" href={"/"}>
 							Đăng ký
