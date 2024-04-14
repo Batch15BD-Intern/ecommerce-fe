@@ -26,6 +26,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
 							alt={product.attributes.image.data.attributes.name}
 							width={190}
 							height={190}
+							priority={true}
 						/>
 					</div>
 					<div className="p-2">

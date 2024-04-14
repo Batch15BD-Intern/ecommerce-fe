@@ -71,6 +71,41 @@ export default function ProductDetailsClient({
 		setVariationOptions(_);
 	}, []);
 
+	const handleSelectVariation = (variation: variationSelected) => {
+		const _: variationSelected[] = [...selectedVariation];
+		const find = _.find((item) => item.id === variation.id);
+
+		if (find) {
+			_.splice(_.indexOf(find), 1);
+		}
+		_.push(variation);
+
+		if (_.length !== variationOptions.length) {
+			setSelectedVariation(_);
+			return;
+		}
+
+		product.data.attributes.product_items.data.forEach((_item) => {
+			_item.attributes.product_config.data.find((_variation) => {
+				if (
+					_variation.attributes.variation.data.id === variation.id &&
+					_variation.id === variation.value
+				) {
+					// console.log(`${_item.attributes.price}`);
+					// console.log(_variation);
+				}
+			});
+		});
+
+		setSelectedVariation(_);
+	};
+
+	const isSelectedVariation = (variation: variationSelected) => {
+		return selectedVariation.find(
+			(item) => item.id === variation.id && item.value === variation.value,
+		);
+	};
+
 	return (
 		<div className="flex">
 			<div className="w-[450px]">
@@ -89,12 +124,29 @@ export default function ProductDetailsClient({
 							? `đ${minPrice.toLocaleString()}`
 							: `đ${minPrice.toLocaleString()} - đ${maxPrice.toLocaleString()}`}
 				</span>
-				{variationOptions.map((item) => (
-					<div key={item.id}>
-						<div>{item.option}</div>
+				{variationOptions.map((variation) => (
+					<div key={variation.id}>
+						<div>{variation.option}</div>
 						<div className="flex gap-2">
-							{item.value.map((item) => (
-								<MyButton key={item.id} label={item.value} />
+							{variation.value.map((option) => (
+								<MyButton
+									key={option.id}
+									label={option.value}
+									className={
+										isSelectedVariation({
+											id: variation.id,
+											value: option.id,
+										})
+											? `bg-neutral-600`
+											: ``
+									}
+									onClick={() => {
+										handleSelectVariation({
+											id: variation.id,
+											value: option.id,
+										});
+									}}
+								/>
 							))}
 						</div>
 					</div>
@@ -105,7 +157,9 @@ export default function ProductDetailsClient({
 				</div>
 				<div className="pt-2">
 					<MyButton
-						className="m-2 bg-[#ee4d2d] bg-opacity-10 text-medium text-[#FF5722] outline-1 outline-[#ee4d2d]"
+						className="m-2 bg-[#ee4d2d] bg-opacity-10 
+						text-medium text-[#FF5722] outline-1
+						outline-[#ee4d2d]"
 						label="Add to cart"
 						icon={<BsCartPlus />}
 					/>
