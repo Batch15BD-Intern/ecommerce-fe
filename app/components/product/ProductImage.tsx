@@ -26,6 +26,7 @@ export default function ProductImage({
 							alt={`Product gallery ${item.id}`}
 							width={450}
 							height={450}
+							priority
 						/>
 					</SwiperSlide>
 				))}

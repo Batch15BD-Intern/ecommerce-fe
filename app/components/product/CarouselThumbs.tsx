@@ -36,6 +36,7 @@ export default function CarouselThumbs({
 							alt={`Product thumb gallery ${item.id}`}
 							width={80}
 							height={80}
+							priority
 						/>
 					</SwiperSlide>
 				))}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import React, { type ReactNode } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/navbar/Navbar";
-import { poppins } from "../fonts";
+import { roboto } from "../fonts";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={`${poppins.className} bg-gray-100`}>
+			<body className={`${roboto.className} bg-gray-100`}>
 				<Navbar
 					icon={""}
 					facebook={"https://www.facebook.com/hoang3409"}

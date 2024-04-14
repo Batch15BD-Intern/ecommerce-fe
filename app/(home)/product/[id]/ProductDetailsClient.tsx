@@ -30,11 +30,13 @@ export default function ProductDetailsClient({
 	const [variationOptions, setVariationOptions] = useState<variationOptions[]>(
 		[],
 	);
-	const [selectedVariation, setSelectedVariation] =
-		useState<variationSelected>();
+	const [selectedVariation, setSelectedVariation] = useState<
+		variationSelected[]
+	>([]);
 	const { minPrice, maxPrice } = getMinMaxPrice(
 		product.data.attributes.product_items.data,
 	);
+	const [price, setPrice] = useState(0);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -81,16 +83,18 @@ export default function ProductDetailsClient({
 			<div className="w-full">
 				<h1>{product.data.attributes.name}</h1>
 				<span>
-					{minPrice === maxPrice
-						? `đ${minPrice.toLocaleString()}`
-						: `đ${minPrice.toLocaleString()} - đ${maxPrice.toLocaleString()}`}
+					{price !== 0
+						? `đ${price.toLocaleString()}`
+						: minPrice === maxPrice
+							? `đ${minPrice.toLocaleString()}`
+							: `đ${minPrice.toLocaleString()} - đ${maxPrice.toLocaleString()}`}
 				</span>
 				{variationOptions.map((item) => (
-					<div>
+					<div key={item.id}>
 						<div>{item.option}</div>
 						<div className="flex gap-2">
 							{item.value.map((item) => (
-								<MyButton label={item.value} />
+								<MyButton key={item.id} label={item.value} />
 							))}
 						</div>
 					</div>
