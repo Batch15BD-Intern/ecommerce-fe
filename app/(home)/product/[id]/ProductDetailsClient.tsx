@@ -85,17 +85,32 @@ export default function ProductDetailsClient({
 			return;
 		}
 
-		product.data.attributes.product_items.data.forEach((_item) => {
-			_item.attributes.product_config.data.find((_variation) => {
-				if (
-					_variation.attributes.variation.data.id === variation.id &&
-					_variation.id === variation.value
-				) {
-					// console.log(`${_item.attributes.price}`);
-					// console.log(_variation);
-				}
-			});
-		});
+		let match = 0;
+		const product_items = product.data.attributes.product_items.data;
+		for (let i = 0; i < product_items.length; i++) {
+			const _item = product_items[i];
+			match = 0;
+			for (let j = 0; j < _item.attributes.product_config.data.length; j++) {
+				const _config = _item.attributes.product_config.data[j];
+				_.forEach((item) => {
+					if (
+						item.id === _config.attributes.variation.data.id &&
+						item.value === _config.id
+					) {
+						match++;
+					}
+				});
+			}
+
+			if (match === _.length) {
+				setPrice(_item.attributes.price);
+				break;
+			}
+		}
+
+		if (match !== _.length) {
+			setPrice(0);
+		}
 
 		setSelectedVariation(_);
 	};
