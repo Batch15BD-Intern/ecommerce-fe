@@ -15,6 +15,16 @@ export type ResponseError = {
 	};
 };
 
+export type ResponseCart = {
+	data: [
+		{
+			id: number;
+			quantity: number;
+			product_item: ProductItems;
+		},
+	];
+};
+
 export type GetAccessTokenResponse = {
 	jwt: string;
 	user: User;
@@ -62,6 +72,7 @@ export type ProductDetails = {
 export type ProductItems = {
 	id: number;
 	attributes: {
+		name: string;
 		price: number;
 		quantity: number;
 		image: {

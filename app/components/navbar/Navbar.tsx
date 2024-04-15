@@ -81,7 +81,9 @@ export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 					</div>
 				</div>
 				<div>
-					<CgShoppingCart className="text-3xl text-white" />
+					<Link href={"/cart"}>
+						<CgShoppingCart className="text-3xl text-white" />
+					</Link>
 				</div>
 			</div>
 		</div>
