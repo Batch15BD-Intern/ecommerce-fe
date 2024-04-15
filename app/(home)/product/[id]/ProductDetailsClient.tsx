@@ -1,7 +1,9 @@
 "use client";
 
 import MyButton from "@/app/components/Button";
+import InputCounter from "@/app/components/InputCounter";
 import ProductGallery from "@/app/components/product/ProductGallery";
+import { E_InputCounter } from "@/app/enum";
 import type { ResponseProductDetails } from "@/app/types";
 import getMinMaxPrice from "@/app/utility/getMinMaxPrice";
 import { useEffect, useState } from "react";
@@ -33,10 +35,11 @@ export default function ProductDetailsClient({
 	const [selectedVariation, setSelectedVariation] = useState<
 		variationSelected[]
 	>([]);
+	const [quantity, setQuantity] = useState(1);
+	const [price, setPrice] = useState(0);
 	const { minPrice, maxPrice } = getMinMaxPrice(
 		product.data.attributes.product_items.data,
 	);
-	const [price, setPrice] = useState(0);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -70,6 +73,16 @@ export default function ProductDetailsClient({
 
 		setVariationOptions(_);
 	}, []);
+
+	const handleQuantity = (type: E_InputCounter) => {
+		if (type === E_InputCounter.DECREMENT) {
+			if (quantity > 1) {
+				setQuantity(quantity - 1);
+			}
+		} else {
+			setQuantity(quantity + 1);
+		}
+	};
 
 	const handleSelectVariation = (variation: variationSelected) => {
 		const _: variationSelected[] = [...selectedVariation];
@@ -131,7 +144,9 @@ export default function ProductDetailsClient({
 				/>
 			</div>
 			<div className="w-full">
-				<h1>{product.data.attributes.name}</h1>
+				<h1 className="text-2xl line-clamp-2">
+					{product.data.attributes.name}
+				</h1>
 				<span>
 					{price !== 0
 						? `đ${price.toLocaleString()}`
@@ -167,8 +182,7 @@ export default function ProductDetailsClient({
 					</div>
 				))}
 				<div className="pt-2">
-					<div>Số lượng</div>
-					<div></div>
+					<InputCounter quantity={quantity} setQuantity={handleQuantity} />
 				</div>
 				<div className="pt-2 flex items-center">
 					<MyButton
