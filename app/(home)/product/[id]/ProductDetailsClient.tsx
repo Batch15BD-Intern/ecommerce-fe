@@ -170,18 +170,18 @@ export default function ProductDetailsClient({
 					<div>Số lượng</div>
 					<div></div>
 				</div>
-				<div className="pt-2">
+				<div className="pt-2 flex items-center">
 					<MyButton
 						className="m-2 bg-[#ee4d2d] bg-opacity-10 
 						text-medium text-[#FF5722] outline-1
-						outline-[#ee4d2d]"
-						label="Add to cart"
+						outline-offset-0 outline-[#ee4d2d]"
+						label="Thêm vào giỏ hàng"
 						icon={<BsCartPlus />}
 					/>
 					<MyButton
-						className="bg-[#ee4d2d] text-medium text-white"
-						label="Add to cart"
-						icon={<BsCartPlus />}
+						className="bg-[#ee4d2d] text-medium text-white
+						outline-none outline-1"
+						label="Mua ngay"
 					/>
 				</div>
 			</div>

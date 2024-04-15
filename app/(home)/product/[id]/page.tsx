@@ -9,6 +9,7 @@ type Props = {
 
 export default async function ProductDetailPage({ params }: Props) {
 	const product = await getProductDetails(params.id);
+	const product_attributes: any = product.data.attributes.attributes;
 
 	return (
 		<div>
@@ -21,7 +22,16 @@ export default async function ProductDetailPage({ params }: Props) {
 							__html: product.data.attributes.description,
 						}}
 					/>
-					<div></div>
+					<div className="flex flex-col">
+						<table className="">
+							{Object.keys(product_attributes).map((key) => (
+								<tr key={key}>
+									<td>{key}</td>
+									<td>{product_attributes[key]}</td>
+								</tr>
+							))}
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
