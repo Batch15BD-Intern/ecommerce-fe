@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 const CartPage = () => {
 	const carts = getCarts();
-
+	
 	useEffect(() => {
 		console.log(carts);
 	});
