@@ -1,10 +1,10 @@
 "use client";
 
 import type { Product } from "@/app/types";
+import getMinMaxPrice from "@/app/utility/getMinMaxPrice";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import getMinMaxPrice from "../../utility/getMinMaxPrice";
 
 type ProductCardProps = {
 	product: Product;

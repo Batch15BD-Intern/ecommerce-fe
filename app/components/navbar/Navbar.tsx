@@ -1,30 +1,51 @@
 "use client";
 
+import Logo from "@/app/components/Logo";
+import { useAuth } from "@/app/hooks/useAuth";
+import { Button } from "@nextui-org/react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import qs from "qs";
 import { useEffect, useState } from "react";
 import { CgShoppingCart } from "react-icons/cg";
 import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
-import { useAuth } from "../../hooks/useAuth";
-import Logo from "../Logo";
 
 type NavbarProps = {
-	icon: string;
 	facebook: string;
 	instagram: string;
 };
 
-export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
+export default function Navbar({ facebook, instagram }: NavbarProps) {
 	const { user, logout } = useAuth();
+	const params = useSearchParams();
+	const route = useRouter();
 	const [search, setSearch] = useState<string>("");
 	const [isClient, setIsClient] = useState(false);
+
+	const handle = () => {
+		let current_query = {};
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+
+		if (search) {
+			current_query = {
+				query: search,
+			};
+		}
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	};
 
 	useEffect(() => {
 		setIsClient(true);
 	}, []);
 
 	return (
-		<div className="top-0 w-full h-[50] bg-gradient-to-r from-[#f53d2d] to-[#f63] z-100 flex flex-col items-center">
+		<div className="top-0 w-full bg-gradient-to-r from-[#f53d2d] to-[#f63] z-100 flex flex-col items-center">
 			<div className="w-[1200px] flex justify-between text-white text-sm">
 				<div className="opacity-90 flex gap-2">
 					<span>Kênh Người Bán</span>
@@ -63,7 +84,7 @@ export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 					<Logo fill="white" />
 				</div>
 				<div className="w-[840px]">
-					<div className="px-[0.625rem] bg-white flex py-[7px]">
+					<div className="flex bg-white px-[0.625rem] py-[7px]">
 						<input
 							className="w-full outline-none"
 							aria-label="Tìm sản phẩm, thương hiệu, và tên shop"
@@ -75,9 +96,13 @@ export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 							value={search}
 							onChange={(e) => setSearch(e.target.value)}
 						/>
-						<button className="bg-[#fb5533] px-[20px] h-[32px]">
+						<Button
+							className="h-[32px] w-10 rounded-none bg-[#fb5533] outline-none"
+							onClick={handle}
+							isIconOnly
+						>
 							<CiSearch className="text-white" />
-						</button>
+						</Button>
 					</div>
 				</div>
 				<div>

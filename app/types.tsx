@@ -159,3 +159,9 @@ export type Gallery = {
 	id: number;
 	imgUrl: string;
 };
+
+export type SearchParams = {
+	query?: string;
+	minPrice?: number;
+	maxPrice?: number;
+};

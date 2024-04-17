@@ -1,4 +1,4 @@
-import { E_InputCounter } from "../enum";
+import { E_InputCounter } from "@/app/enum";
 
 interface InputCounterProps {
 	quantity: number;

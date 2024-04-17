@@ -1,39 +1,39 @@
 "use client";
 
-import { type GetAccessTokenResponse, URL_API, type User } from "@/app/types";
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useAuth } from "@/app/hooks/useAuth";
+import { type GetAccessTokenResponse, URL_API } from "@/app/types";
+import { CircularProgress } from "@nextui-org/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect } from "react";
 
-export default function AuthCallback() {
+interface AuthCallbackProps {
+	params: { slug: string };
+}
+
+export default function AuthCallback({ params }: AuthCallbackProps) {
 	const router = useSearchParams();
-	const params = Object.fromEntries(router.entries());
-
-	const [jwt, setJwt] = useState("");
-	const [user, setUser] = useState<User | null>(null);
+	const _params = Object.fromEntries(router.entries());
+	const { save_token } = useAuth();
+	const route = useRouter();
 
 	useEffect(() => {
 		fetch(
-			`${URL_API}/api/auth/github/callback?access_token=${params.access_token}`,
+			`${URL_API}/api/auth/${params.slug}/callback?access_token=${_params.access_token}`,
 		).then((res) => {
-			res.json().then((resJson: GetAccessTokenResponse) => {
-				setJwt(resJson.jwt);
-				setUser(resJson.user);
-			});
+			if (res.ok) {
+				res.json().then((resJson: GetAccessTokenResponse) => {
+					save_token(resJson.jwt, resJson.user);
+				});
+				route.push("/");
+			} else {
+				route.push("/auth");
+			}
 		});
-
-		fetch(`${URL_API}/api/users/me`, {
-			headers: {
-				Authorization: `Bearer ${params.access_token}`,
-			},
-		}).then((res) => {
-			console.log("res", res);
-		});
-	});
+	}, [_params, params, route, save_token]);
 
 	return (
-		<div>
-			<h1>Auth</h1>
-			<span>Hello {user?.username}</span>
-		</div>
+		<Suspense fallback={<CircularProgress />}>
+			<div></div>
+		</Suspense>
 	);
 }

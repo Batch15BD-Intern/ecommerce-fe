@@ -1,5 +1,5 @@
+import Logo from "@/app/components/Logo";
 import Link from "next/link";
-import Logo from "../Logo";
 
 export default function SecondNavbar() {
 	return (
