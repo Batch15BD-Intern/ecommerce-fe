@@ -1,5 +1,5 @@
+import { type ResponseListingProduct, URL_API } from "@/app/types";
 import qs from "qs";
-import { type ResponseListingProduct, URL_API } from "../types";
 
 export default async function getListingProduct(): Promise<ResponseListingProduct> {
 	const query = qs.stringify({

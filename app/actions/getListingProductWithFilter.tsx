@@ -1,5 +1,5 @@
+import { type ResponseListingProduct, URL_API } from "@/app/types";
 import qs from "qs";
-import { type ResponseListingProduct, URL_API } from "../types";
 
 interface ProductFilter {
 	page?: number;
