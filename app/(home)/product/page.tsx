@@ -1,6 +1,4 @@
-import { log } from "node:console";
 import getListingProductWithFilter from "@/app/actions/getListingProductWithFilter";
-import ProductCard from "@/app/components/product/ProductCard";
 import type { SearchParams } from "@/app/types";
 import qs from "qs";
 import {

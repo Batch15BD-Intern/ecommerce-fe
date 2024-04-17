@@ -1,12 +1,14 @@
 "use client";
 
+import getAutocomplete from "@/app/actions/getAutocomplete";
 import Logo from "@/app/components/Logo";
 import { useAuth } from "@/app/hooks/useAuth";
+import type { Product } from "@/app/types";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CgShoppingCart } from "react-icons/cg";
 import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
@@ -17,27 +19,63 @@ type NavbarProps = {
 };
 
 export default function Navbar({ facebook, instagram }: NavbarProps) {
+	const [isClient, setIsClient] = useState(false);
+	const [isSearchFocused, setIsSearchFocused] = useState(false);
 	const { user, logout } = useAuth();
 	const params = useSearchParams();
 	const route = useRouter();
 	const [search, setSearch] = useState<string>("");
-	const [isClient, setIsClient] = useState(false);
+	const [autocomplete, setAutocomplete] = useState<Product[]>([]);
 
-	const handle = () => {
+	const handle = (_query?: string) => {
+		setAutocomplete([]);
 		let current_query = {};
 
 		if (params) {
 			current_query = qs.parse(params.toString());
 		}
 
-		if (search) {
-			current_query = {
-				query: search,
-			};
+		if (search || _query) {
+			current_query = _query
+				? {
+						query: _query,
+					}
+				: {
+						query: search,
+					};
 		}
 
 		const url = qs.stringify(current_query, { skipNulls: true });
 		route.push(`/product?${url}`);
+	};
+
+	const autocompleteTimeoutRef = useRef<any>();
+	const handleAutocomplete = (query: string) => {
+		setSearch(query);
+		if (!query) {
+			setAutocomplete([]);
+			return;
+		}
+
+		if (autocompleteTimeoutRef.current) {
+			clearTimeout(autocompleteTimeoutRef.current);
+		}
+
+		autocompleteTimeoutRef.current = setTimeout(() => {
+			if (!query) {
+				setAutocomplete([]);
+				return;
+			}
+			getAutocomplete(query).then((res) => {
+				setAutocomplete(res.data);
+			});
+		}, 650);
+	};
+
+	const handleSelectAutocomplete = (product: Product) => {
+		setAutocomplete([]);
+		setSearch(product.attributes.name);
+		handle(product.attributes.name);
 	};
 
 	useEffect(() => {
@@ -84,7 +122,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					<Logo fill="white" />
 				</div>
 				<div className="w-[840px]">
-					<div className="flex bg-white px-[0.625rem] py-[7px]">
+					<div className="relative flex bg-white px-[0.625rem] py-[7px]">
 						<input
 							className="w-full outline-none"
 							aria-label="Tìm sản phẩm, thương hiệu, và tên shop"
@@ -94,16 +132,31 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 							aria-expanded="false"
 							role="combobox"
 							value={search}
-							onChange={(e) => setSearch(e.target.value)}
+							onChange={(e) => handleAutocomplete(e.target.value)}
+							onFocus={() => setIsSearchFocused(true)}
+							onBlur={() => setIsSearchFocused(false)}
 						/>
 						<Button
 							className="h-[32px] w-10 rounded-none bg-[#fb5533] outline-none"
-							onClick={handle}
+							onClick={() => handle()}
 							isIconOnly
 						>
 							<CiSearch className="text-white" />
 						</Button>
 					</div>
+					{isSearchFocused && (
+						<div className="absolute mt-2 flex flex-col w-[840px] z-50">
+							{autocomplete.map((item) => (
+								<div
+									className="cursor-pointer bg-white p-2"
+									key={item.id}
+									onClick={() => handleSelectAutocomplete(item)}
+								>
+									{item.attributes.name}
+								</div>
+							))}
+						</div>
+					)}
 				</div>
 				<div>
 					<CgShoppingCart className="text-3xl text-white" />
