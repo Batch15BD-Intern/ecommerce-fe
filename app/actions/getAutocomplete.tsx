@@ -1,10 +1,10 @@
+import { type ResponseListingProduct, URL_API } from "@/app/types";
 import qs from "qs";
-import { type ResponseListingProduct, URL_API } from "../types";
 
 export default function getAutocomplete(
 	query: string,
 ): Promise<ResponseListingProduct> {
-	const _query = qs.stringify({
+	const querySearch = qs.stringify({
 		filters: {
 			name: {
 				$containsi: query,
@@ -17,7 +17,7 @@ export default function getAutocomplete(
 		},
 	});
 
-	return fetch(`${URL_API}/api/products?${_query}`, {
+	return fetch(`${URL_API}/api/products?${querySearch}`, {
 		cache: "reload",
 	}).then((res) => {
 		if (res.ok) {
