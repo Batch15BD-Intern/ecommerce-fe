@@ -29,7 +29,7 @@ export default async function getListingProduct(): Promise<ResponseListingProduc
 	});
 
 	return fetch(`${URL_API}/api/products?${query}`, {
-		cache: "reload",
+		next: { revalidate: 3600 },
 	}).then((res) => {
 		if (res.ok) {
 			return res.json();

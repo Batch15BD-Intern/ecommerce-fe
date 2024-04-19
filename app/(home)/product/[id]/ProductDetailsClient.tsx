@@ -135,8 +135,8 @@ export default function ProductDetailsClient({
 	};
 
 	return (
-		<div className="flex">
-			<div className="w-[450px]">
+		<div className="flex gap-5">
+			<div className="w-[450px] ml-5">
 				<ProductGallery
 					product={product}
 					thumbsSwiper={thumbsSwiper}
