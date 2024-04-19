@@ -8,6 +8,9 @@ interface ProductFilter {
 	maxPrice?: number;
 	brand?: number;
 	query?: string;
+	categories?: number[];
+	stars?: number;
+	attribute?: string;
 }
 
 export default async function getListingProductWithFilter({
@@ -17,12 +20,22 @@ export default async function getListingProductWithFilter({
 	maxPrice = Number.MAX_SAFE_INTEGER,
 	brand,
 	query,
+	categories,
+	stars,
+	attribute,
 }: ProductFilter): Promise<ResponseListingProduct> {
+	const attributes = attribute as unknown as {
+		variation: number;
+		option: number;
+	}[];
 	const _query = qs.stringify({
 		fields: ["name", "physical_product", "featured"],
 		filters: {
 			...(query === undefined ? {} : { name: { $containsi: query } }),
 			...(brand === undefined ? {} : { brand: { id: { $eq: brand } } }),
+			...(categories === undefined
+				? {}
+				: { category: { id: { $in: categories } } }),
 			product_items: {
 				$and: [
 					{
@@ -32,6 +45,26 @@ export default async function getListingProductWithFilter({
 						price: { $lte: maxPrice },
 					},
 				],
+				...(attributes.length === 0
+					? {}
+					: {
+							$or: [
+								...attributes.map((item) => {
+									return {
+										product_config: {
+											id: {
+												$eq: item.option,
+											},
+											variation: {
+												id: {
+													$eq: item.variation,
+												},
+											},
+										},
+									};
+								}),
+							],
+						}),
 			},
 		},
 		populate: {

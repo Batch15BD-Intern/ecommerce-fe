@@ -19,6 +19,10 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
 		query: parsedParams?.query,
 		minPrice: parsedParams?.minPrice,
 		maxPrice: parsedParams?.maxPrice,
+		brand: parsedParams?.brand,
+		categories: parsedParams?.categories,
+		stars: parsedParams?.stars,
+		attribute: parsedParams?.attribute,
 	});
 
 	return (
@@ -26,6 +30,11 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
 			<ProductClientPage />
 			<div className="flex flex-col gap-4 w-full">
 				<ProductFilterStatic />
+				{parsedParams?.query && (
+					<div>
+						<span>Kết quả tìm kiếm cho từ khoá `{parsedParams.query}`</span>
+					</div>
+				)}
 				<ProductItems products={products} />
 			</div>
 		</div>

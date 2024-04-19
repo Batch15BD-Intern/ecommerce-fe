@@ -48,14 +48,10 @@ export type ProductDetails = {
 		name: string;
 		description: string;
 		attributes: object;
-		brand: Brand;
-		category: Category;
-		image: {
-			data: Image;
-		};
-		product_items: {
-			data: ProductItems[];
-		};
+		brand: { data: Brand };
+		category: { data: Category };
+		image: { data: Image };
+		product_items: { data: ProductItems[] };
 	};
 };
 
@@ -64,12 +60,8 @@ export type ProductItems = {
 	attributes: {
 		price: number;
 		quantity: number;
-		image: {
-			data: Image[];
-		};
-		product_config: {
-			data: ProductConfig[];
-		};
+		image: { data: Image[] };
+		product_config: { data: ProductConfig[] };
 	};
 };
 
@@ -94,34 +86,42 @@ export type Product = {
 		name: string;
 		physical_product: boolean;
 		featured: string;
-		category: Category;
-		brand: Brand;
-		product_items: {
-			data: ProductItems[];
-		};
-		image: {
-			data: Image;
-		};
+		category: { data: Category };
+		brand: { data: Brand };
+		product_items: { data: ProductItems[] };
+		image: { data: Image };
 	};
 };
 
 export type Category = {
-	data: {
-		id: number;
-		attributes: {
-			name: string;
-			locale: string;
-			parent_category: Category;
-		};
+	id: number;
+	attributes: {
+		name: string;
+		locale: string;
+		parent_category: Category;
+		variations: { data: Variation[] };
+	};
+};
+
+export type Variation = {
+	id: number;
+	attributes: {
+		name: string;
+		variation_options: { data: VariationOptions[] };
+	};
+};
+
+export type VariationOptions = {
+	id: number;
+	attributes: {
+		value: string;
 	};
 };
 
 export type Brand = {
-	data: {
-		id: number;
-		attributes: {
-			name: string;
-		};
+	id: number;
+	attributes: {
+		name: string;
 	};
 };
 
@@ -165,4 +165,8 @@ export type SearchParams = {
 	query?: string;
 	minPrice?: number;
 	maxPrice?: number;
+	brand?: number;
+	categories?: number[];
+	stars?: number;
+	attribute?: string;
 };
