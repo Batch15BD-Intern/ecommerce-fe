@@ -99,6 +99,22 @@ export type Category = {
 		name: string;
 		locale: string;
 		parent_category: Category;
+		variations: { data: Variation[] };
+	};
+};
+
+export type Variation = {
+	id: number;
+	attributes: {
+		name: string;
+		variation_options: { data: VariationOptions[] };
+	};
+};
+
+export type VariationOptions = {
+	id: number;
+	attributes: {
+		value: string;
 	};
 };
 
@@ -152,4 +168,5 @@ export type SearchParams = {
 	brand?: number;
 	categories?: number[];
 	stars?: number;
+	attribute?: string;
 };

@@ -21,6 +21,8 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
 		maxPrice: parsedParams?.maxPrice,
 		brand: parsedParams?.brand,
 		categories: parsedParams?.categories,
+		stars: parsedParams?.stars,
+		attribute: parsedParams?.attribute,
 	});
 
 	return (

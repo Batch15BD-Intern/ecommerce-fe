@@ -2,11 +2,12 @@
 
 import getBrands from "@/app/actions/getBrands";
 import getCategories from "@/app/actions/getCategories";
+import getVariationOptions from "@/app/actions/getVariationOptions";
 import MyButton from "@/app/components/Button";
 import ProductCard from "@/app/components/product/ProductCard";
 import { useBrand } from "@/app/hooks/useBrand";
 import { useCategory } from "@/app/hooks/useCategory";
-import type { ResponseListingProduct } from "@/app/types";
+import type { ResponseListingProduct, Variation } from "@/app/types";
 import {
 	Button,
 	Checkbox,
@@ -25,7 +26,6 @@ import qs from "qs";
 import { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
-import ReactStars from "react-stars";
 
 const ProductClientPage = () => {
 	const [currentBrands, setCurrentBrands] = useState(-1);
@@ -39,6 +39,8 @@ const ProductClientPage = () => {
 	const { categories, save_categories } = useCategory();
 	const [showAllCategory, setShowAllCategory] = useState(false);
 	const [rating, setRating] = useState<number>();
+	const [variation, setVariation] = useState<Variation[]>([]);
+	const [productConfig, setProductConfig] = useState<any>();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -47,6 +49,15 @@ const ProductClientPage = () => {
 		}
 		getBrands().then((res) => {
 			save_brands(res.data);
+		});
+	}, []);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (variation && variation.length > 0) return;
+
+		getVariationOptions().then((res) => {
+			setVariation(res.data);
 		});
 	}, []);
 
@@ -144,11 +155,35 @@ const ProductClientPage = () => {
 		route.push(`/product?${url}`);
 	}, [rating]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (!productConfig) return;
+		let current_query = {};
+		const currentVariation: any = [];
+		Object.keys(productConfig).forEach((key) => {
+			currentVariation.push({
+				variation: key,
+				option: productConfig[key],
+			});
+		});
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+		current_query = {
+			...current_query,
+			attribute: currentVariation.length > 0 ? currentVariation : null,
+		};
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	}, [productConfig]);
+
 	return (
 		<div className="flex flex-col basis-[235px]">
 			{/* Category */}
 			<div className="flex flex-col">
-				<h3>Theo danh mục</h3>
+				<h3 className="font-bold">Theo danh mục</h3>
 				<div className="flex flex-col">
 					<CheckboxGroup value={category} onValueChange={setCategory}>
 						{categories?.slice(0, 4).map((c) => (
@@ -169,17 +204,44 @@ const ProductClientPage = () => {
 				</div>
 			</div>
 			<Spacer />
-			{/* Nơi Bán */}
-			<div></div>
+			{/* Product atributes */}
+			<div>
+				<h3 className="font-bold">Thuộc tính sản phẩm</h3>
+				<div className="flex flex-col">
+					{variation?.map((v) => (
+						<div key={v.id} className="flex flex-col gap-2">
+							<div className="font-bold">{v.attributes.name}</div>
+							<RadioGroup>
+								{v.attributes.variation_options.data.map((item) => (
+									<Radio
+										key={item.id}
+										aria-label={item.attributes.value}
+										value={item.attributes.value}
+										onChange={() =>
+											setProductConfig({
+												...productConfig,
+												[v.id]: item.id,
+											})
+										}
+									>
+										{item.attributes.value}
+									</Radio>
+								))}
+							</RadioGroup>
+						</div>
+					))}
+				</div>
+			</div>
 			<Spacer />
 			{/* Thương Hiệu */}
 			<div>
-				<h3>Thương hiệu</h3>
+				<h3 className="font-bold">Thương hiệu</h3>
 				<div className="flex flex-col">
 					<RadioGroup>
 						{brands?.map((b) => (
 							<Radio
 								key={b.id}
+								aria-label={b.attributes.name}
 								value={b.attributes.name}
 								onChange={() => setCurrentBrands(b.id)}
 							>
@@ -200,7 +262,7 @@ const ProductClientPage = () => {
 					value={priceRange}
 					onChange={setPriceRange}
 					formatOptions={{ style: "currency", currency: "VND" }}
-					className="max-w-md"
+					className="max-w-md font-bold"
 				/>
 			</div>
 			<Spacer />
@@ -212,6 +274,7 @@ const ProductClientPage = () => {
 						{[5, 4, 3, 2, 1].map((rating) => (
 							<Radio
 								key={rating}
+								aria-label={rating.toString()}
 								value={rating.toString()}
 								onChange={() => setRating(rating)}
 							>
