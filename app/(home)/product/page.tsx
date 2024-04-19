@@ -20,6 +20,7 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
 		minPrice: parsedParams?.minPrice,
 		maxPrice: parsedParams?.maxPrice,
 		brand: parsedParams?.brand,
+		categories: parsedParams?.categories,
 	});
 
 	return (

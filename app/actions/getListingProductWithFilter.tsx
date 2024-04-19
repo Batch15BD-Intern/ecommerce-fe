@@ -8,6 +8,7 @@ interface ProductFilter {
 	maxPrice?: number;
 	brand?: number;
 	query?: string;
+	categories?: number[];
 }
 
 export default async function getListingProductWithFilter({
@@ -17,12 +18,16 @@ export default async function getListingProductWithFilter({
 	maxPrice = Number.MAX_SAFE_INTEGER,
 	brand,
 	query,
+	categories,
 }: ProductFilter): Promise<ResponseListingProduct> {
 	const _query = qs.stringify({
 		fields: ["name", "physical_product", "featured"],
 		filters: {
 			...(query === undefined ? {} : { name: { $containsi: query } }),
 			...(brand === undefined ? {} : { brand: { id: { $eq: brand } } }),
+			...(categories === undefined
+				? {}
+				: { category: { id: { $in: categories } } }),
 			product_items: {
 				$and: [
 					{

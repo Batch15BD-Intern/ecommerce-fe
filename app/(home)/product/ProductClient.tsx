@@ -1,13 +1,16 @@
 "use client";
 
 import getBrands from "@/app/actions/getBrands";
+import getCategories from "@/app/actions/getCategories";
 import MyButton from "@/app/components/Button";
 import ProductCard from "@/app/components/product/ProductCard";
 import { useBrand } from "@/app/hooks/useBrand";
+import { useCategory } from "@/app/hooks/useCategory";
 import type { ResponseListingProduct } from "@/app/types";
 import {
 	Button,
 	Checkbox,
+	CheckboxGroup,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
@@ -22,34 +25,19 @@ import qs from "qs";
 import { useEffect, useState } from "react";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
-const Category = [
-	{
-		id: 1,
-		name: "Ốp lưng, bao da, Miếng dán điện thoại",
-	},
-	{
-		id: 2,
-		name: "Bảo vệ màn hình",
-	},
-	{
-		id: 3,
-		name: "Pin Gắn Trong, Cáp và Bộ Sạc",
-	},
-	{
-		id: 4,
-		name: "Phụ kiện khác",
-	},
-];
-
 const ProductClientPage = () => {
 	const [currentBrands, setCurrentBrands] = useState(-1);
+	const [category, setCategory] = useState<string[]>([]);
 	const [priceRange, setPriceRange] = useState<number[] | number>([
 		0, 50000000,
 	]);
 	const params = useSearchParams();
 	const route = useRouter();
 	const { brands, save_brands } = useBrand();
+	const { categories, save_categories } = useCategory();
+	const [showAllCategory, setShowAllCategory] = useState(false);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (brands && brands?.length > 0) {
 			return;
@@ -57,8 +45,19 @@ const ProductClientPage = () => {
 		getBrands().then((res) => {
 			save_brands(res.data);
 		});
-	});
+	}, []);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (categories && categories.length > 0) {
+			return;
+		}
+		getCategories().then((res) => {
+			save_categories(res.data);
+		});
+	}, []);
+
+	// PRICE RANGE
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		const handler = setTimeout(() => {
@@ -88,6 +87,7 @@ const ProductClientPage = () => {
 		};
 	}, [priceRange]);
 
+	// BRANDS
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (currentBrands === -1) return;
@@ -106,15 +106,46 @@ const ProductClientPage = () => {
 		route.push(`/product?${url}`);
 	}, [currentBrands]);
 
+	// CATEGORY
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		let current_query = {};
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+
+		current_query = {
+			...current_query,
+			categories: category.length > 0 ? category : null,
+		};
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	}, [category]);
+
 	return (
 		<div className="flex flex-col basis-[235px]">
 			{/* Category */}
 			<div className="flex flex-col">
 				<h3>Theo danh mục</h3>
 				<div className="flex flex-col">
-					{Category.map((c) => (
-						<Checkbox key={c.id}>{c.name}</Checkbox>
-					))}
+					<CheckboxGroup value={category} onValueChange={setCategory}>
+						{categories?.slice(0, 4).map((c) => (
+							<Checkbox key={c.id} value={c.id.toString()}>
+								{c.attributes.name}
+							</Checkbox>
+						))}
+						{categories && categories?.length > 4 && !showAllCategory && (
+							<button onClick={() => setShowAllCategory(true)}>Xem thêm</button>
+						)}
+						{showAllCategory &&
+							categories?.slice(4).map((c) => (
+								<Checkbox key={c.id} value={c.id.toString()}>
+									{c.attributes.name}
+								</Checkbox>
+							))}
+					</CheckboxGroup>
 				</div>
 			</div>
 			<Spacer />
