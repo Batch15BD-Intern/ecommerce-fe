@@ -2,21 +2,36 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { CgShoppingCart } from "react-icons/cg";
 import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import Logo from "../Logo";
+import { getCartsJwt } from "@/app/actions/api_carts/getCarts";
+import type { ResponseCart } from "@/app/types";
+import IconCart from "../cart/IconCart";
 
 type NavbarProps = {
 	icon: string;
 	facebook: string;
 	instagram: string;
 };
+type Props = {
+	params: {
+		id: string;
+	};
+};
 
-export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
-	const { user, logout } = useAuth();
+export default function Navbar({ facebook, instagram }: NavbarProps) {
+	const { user, logout, jwt } = useAuth();
 	const [search, setSearch] = useState<string>("");
+	const [carts, setCarts] = useState<ResponseCart | null>(null);
+	const [quantity, setQuantity] = useState(1);
+
+	useEffect(() => {
+		getCartsJwt(jwt)?.then((res) => {
+			setCarts(res);
+		});
+	}, [jwt]);
 	const [isClient, setIsClient] = useState(false);
 
 	useEffect(() => {
@@ -80,11 +95,7 @@ export default function Navbar({ icon, facebook, instagram }: NavbarProps) {
 						</button>
 					</div>
 				</div>
-				<div>
-					<Link href={"/cart"}>
-						<CgShoppingCart className="text-3xl text-white" />
-					</Link>
-				</div>
+				<IconCart />
 			</div>
 		</div>
 	);

@@ -1,9 +1,12 @@
 "use client";
 
+import { postCart } from "@/app/actions/api_carts/postCart";
+import getInventoryByProductItem from "@/app/actions/getInventoryByProductItem";
 import MyButton from "@/app/components/Button";
 import InputCounter from "@/app/components/InputCounter";
 import ProductGallery from "@/app/components/product/ProductGallery";
 import { E_InputCounter } from "@/app/enum";
+import { useAuth } from "@/app/hooks/useAuth";
 import type { ResponseProductDetails } from "@/app/types";
 import getMinMaxPrice from "@/app/utility/getMinMaxPrice";
 import { useEffect, useState } from "react";
@@ -35,11 +38,14 @@ export default function ProductDetailsClient({
 	const [selectedVariation, setSelectedVariation] = useState<
 		variationSelected[]
 	>([]);
+	const [productItem, setProductItem] = useState(-1);
+	const [inventory, setInventory] = useState(0);
 	const [quantity, setQuantity] = useState(1);
 	const [price, setPrice] = useState(0);
 	const { minPrice, maxPrice } = getMinMaxPrice(
 		product.data.attributes.product_items.data,
 	);
+	const { jwt } = useAuth();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -117,6 +123,7 @@ export default function ProductDetailsClient({
 
 			if (match === _.length) {
 				setPrice(_item.attributes.price);
+				setProductItem(_item.id);
 				break;
 			}
 		}
@@ -128,15 +135,26 @@ export default function ProductDetailsClient({
 		setSelectedVariation(_);
 	};
 
+	useEffect(() => {
+		if (productItem === -1) return;
+		getInventoryByProductItem(productItem).then((quantity: any) => {
+			setInventory(quantity.quantity);
+		});
+	}, [productItem]);
+
 	const isSelectedVariation = (variation: variationSelected) => {
 		return selectedVariation.find(
 			(item) => item.id === variation.id && item.value === variation.value,
 		);
 	};
 
+	const handleAddCart = () => {
+		const carts = postCart(jwt, quantity, productItem);
+	};
+
 	return (
-		<div className="flex">
-			<div className="w-[450px]">
+		<div className="flex gap-5">
+			<div className="w-[450px] ml-5">
 				<ProductGallery
 					product={product}
 					thumbsSwiper={thumbsSwiper}
@@ -181,8 +199,11 @@ export default function ProductDetailsClient({
 						</div>
 					</div>
 				))}
-				<div className="pt-2">
-					<InputCounter quantity={quantity} setQuantity={handleQuantity} />
+				<div className="pt-2 flex gap-4 items-end">
+					<div>
+						<InputCounter quantity={quantity} setQuantity={handleQuantity} />
+					</div>
+					{inventory > 0 ? <div>Còn {inventory} sản phẩm</div> : <></>}
 				</div>
 				<div className="pt-2 flex items-center">
 					<MyButton
@@ -191,6 +212,7 @@ export default function ProductDetailsClient({
 						outline-offset-0 outline-[#ee4d2d]"
 						label="Thêm vào giỏ hàng"
 						icon={<BsCartPlus />}
+						onClick={handleAddCart}
 					/>
 					<MyButton
 						className="bg-[#ee4d2d] text-medium text-white
