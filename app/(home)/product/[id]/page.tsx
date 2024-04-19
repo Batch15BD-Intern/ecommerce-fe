@@ -26,7 +26,7 @@ export default async function ProductDetailPage({ params }: Props) {
 						<table className="">
 							{Object.keys(product_attributes).map((key) => (
 								<tr key={key}>
-									<td>{key}</td>
+									<td className="line-clamp-1">{key}</td>
 									<td>{product_attributes[key]}</td>
 								</tr>
 							))}
