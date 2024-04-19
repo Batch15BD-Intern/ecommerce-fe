@@ -1,11 +1,9 @@
 import getListingProductWithFilter from "@/app/actions/getListingProductWithFilter";
 import type { SearchParams } from "@/app/types";
 import qs from "qs";
-import {
-	ProductClientPage,
-	ProductFilterStatic,
-	ProductItems,
-} from "./ProductClient";
+import { ProductClientPage } from "./ProductClient";
+import { ProductFilterStatic } from "./ProductFilterStatic";
+import { ProductItems } from "./ProductItems";
 
 interface ProductsPageProps {
 	searchParams?: string;
