@@ -1,7 +1,9 @@
 "use client";
 
+import getBrands from "@/app/actions/getBrands";
 import MyButton from "@/app/components/Button";
 import ProductCard from "@/app/components/product/ProductCard";
+import { useBrand } from "@/app/hooks/useBrand";
 import type { ResponseListingProduct } from "@/app/types";
 import {
 	Button,
@@ -10,6 +12,8 @@ import {
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
+	Radio,
+	RadioGroup,
 	Slider,
 	Spacer,
 } from "@nextui-org/react";
@@ -38,11 +42,22 @@ const Category = [
 ];
 
 const ProductClientPage = () => {
+	const [currentBrands, setCurrentBrands] = useState(-1);
 	const [priceRange, setPriceRange] = useState<number[] | number>([
 		0, 50000000,
 	]);
 	const params = useSearchParams();
 	const route = useRouter();
+	const { brands, save_brands } = useBrand();
+
+	useEffect(() => {
+		if (brands && brands?.length > 0) {
+			return;
+		}
+		getBrands().then((res) => {
+			save_brands(res.data);
+		});
+	});
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -73,6 +88,24 @@ const ProductClientPage = () => {
 		};
 	}, [priceRange]);
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (currentBrands === -1) return;
+		let current_query = {};
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+
+		current_query = {
+			...current_query,
+			brand: currentBrands,
+		};
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	}, [currentBrands]);
+
 	return (
 		<div className="flex flex-col basis-[235px]">
 			{/* Category */}
@@ -89,7 +122,22 @@ const ProductClientPage = () => {
 			<div></div>
 			<Spacer />
 			{/* Thương Hiệu */}
-			<div></div>
+			<div>
+				<h3>Thương hiệu</h3>
+				<div className="flex flex-col">
+					<RadioGroup>
+						{brands?.map((b) => (
+							<Radio
+								key={b.id}
+								value={b.attributes.name}
+								onChange={() => setCurrentBrands(b.id)}
+							>
+								{b.attributes.name}
+							</Radio>
+						))}
+					</RadioGroup>
+				</div>
+			</div>
 			<Spacer />
 			{/* Price range */}
 			<div>

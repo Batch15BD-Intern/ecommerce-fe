@@ -48,7 +48,7 @@ export type ProductDetails = {
 		name: string;
 		description: string;
 		attributes: object;
-		brand: Brand;
+		brand: { data: Brand };
 		category: Category;
 		image: {
 			data: Image;
@@ -95,7 +95,9 @@ export type Product = {
 		physical_product: boolean;
 		featured: string;
 		category: Category;
-		brand: Brand;
+		brand: {
+			data: Brand;
+		};
 		product_items: {
 			data: ProductItems[];
 		};
@@ -117,11 +119,9 @@ export type Category = {
 };
 
 export type Brand = {
-	data: {
-		id: number;
-		attributes: {
-			name: string;
-		};
+	id: number;
+	attributes: {
+		name: string;
 	};
 };
 
@@ -165,4 +165,5 @@ export type SearchParams = {
 	query?: string;
 	minPrice?: number;
 	maxPrice?: number;
+	brand?: number;
 };
