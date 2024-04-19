@@ -1,3 +1,5 @@
+"use client";
+
 import { E_InputCounter } from "@/app/enum";
 
 interface InputCounterProps {
