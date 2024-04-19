@@ -23,7 +23,9 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { useEffect, useState } from "react";
+import { FaStar } from "react-icons/fa";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
+import ReactStars from "react-stars";
 
 const ProductClientPage = () => {
 	const [currentBrands, setCurrentBrands] = useState(-1);
@@ -36,6 +38,7 @@ const ProductClientPage = () => {
 	const { brands, save_brands } = useBrand();
 	const { categories, save_categories } = useCategory();
 	const [showAllCategory, setShowAllCategory] = useState(false);
+	const [rating, setRating] = useState<number>();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
@@ -124,6 +127,23 @@ const ProductClientPage = () => {
 		route.push(`/product?${url}`);
 	}, [category]);
 
+	// RATING
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		let current_query = {};
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+		current_query = {
+			...current_query,
+			stars: rating,
+		};
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	}, [rating]);
+
 	return (
 		<div className="flex flex-col basis-[235px]">
 			{/* Category */}
@@ -185,7 +205,22 @@ const ProductClientPage = () => {
 			</div>
 			<Spacer />
 			{/* Đánh Giá */}
-			<div></div>
+			<div>
+				<h3>Đánh giá</h3>
+				<div className="flex flex-col">
+					<RadioGroup>
+						{[5, 4, 3, 2, 1].map((rating) => (
+							<Radio
+								key={rating}
+								value={rating.toString()}
+								onChange={() => setRating(rating)}
+							>
+								<StarRating rating={rating} />
+							</Radio>
+						))}
+					</RadioGroup>
+				</div>
+			</div>
 		</div>
 	);
 };
@@ -239,6 +274,20 @@ const ProductItems = ({ products }: { products: ResponseListingProduct }) => {
 		<div className="mt-5 grid gap-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
 			{products.data.map((product) => (
 				<ProductCard key={product.id} product={product} />
+			))}
+		</div>
+	);
+};
+
+const StarRating = ({ rating }: { rating: number }) => {
+	const totalStars = 5;
+	return (
+		<div className="flex">
+			{[...Array(totalStars)].map((_, index) => (
+				<FaStar
+					key={index}
+					className={index < rating ? "text-[#FF5722]" : ""}
+				/>
 			))}
 		</div>
 	);

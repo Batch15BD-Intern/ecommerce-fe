@@ -9,6 +9,7 @@ interface ProductFilter {
 	brand?: number;
 	query?: string;
 	categories?: number[];
+	stars?: number;
 }
 
 export default async function getListingProductWithFilter({
@@ -19,6 +20,7 @@ export default async function getListingProductWithFilter({
 	brand,
 	query,
 	categories,
+	stars,
 }: ProductFilter): Promise<ResponseListingProduct> {
 	const _query = qs.stringify({
 		fields: ["name", "physical_product", "featured"],

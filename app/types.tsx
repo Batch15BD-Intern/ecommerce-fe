@@ -151,4 +151,5 @@ export type SearchParams = {
 	maxPrice?: number;
 	brand?: number;
 	categories?: number[];
+	stars?: number;
 };
