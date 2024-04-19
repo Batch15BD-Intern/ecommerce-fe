@@ -3,7 +3,7 @@ import qs from "qs";
 
 export default async function getListingProduct(): Promise<ResponseListingProduct> {
 	const query = qs.stringify({
-		fields: ["name", "physical_product"],
+		fields: ["name", "physical_product", "featured"],
 		populate: {
 			brand: {
 				fields: ["name"],
@@ -29,7 +29,7 @@ export default async function getListingProduct(): Promise<ResponseListingProduc
 	});
 
 	return fetch(`${URL_API}/api/products?${query}`, {
-		next: { revalidate: 3600 },
+		cache: "no-store",
 	}).then((res) => {
 		if (res.ok) {
 			return res.json();

@@ -93,6 +93,7 @@ export type Product = {
 	attributes: {
 		name: string;
 		physical_product: boolean;
+		featured: string;
 		category: Category;
 		brand: Brand;
 		product_items: {

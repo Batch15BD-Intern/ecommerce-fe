@@ -19,7 +19,7 @@ export default async function getListingProductWithFilter({
 	query,
 }: ProductFilter): Promise<ResponseListingProduct> {
 	const _query = qs.stringify({
-		fields: ["name", "physical_product"],
+		fields: ["name", "physical_product", "featured"],
 		filters: {
 			...(query === undefined ? {} : { name: { $containsi: query } }),
 			...(brand === undefined ? {} : { brand: { id: { $eq: brand } } }),
