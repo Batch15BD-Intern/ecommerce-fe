@@ -20,7 +20,7 @@ export type ResponseCart = {
 		{
 			id: number;
 			quantity: number;
-			product_item: ProductItems;
+			product_item: ProductItemsCart;
 		},
 	];
 };
@@ -67,6 +67,20 @@ export type ProductDetails = {
 			data: ProductItems[];
 		};
 	};
+};
+export type ProductItemsCart = {
+	id: number;
+	price: number;
+	name: string;
+	image: [
+		{
+			formats: {
+				small: ImageFormats;
+				medium: ImageFormats;
+				thumbnail: ImageFormats;
+			};
+		},
+	];
 };
 
 export type ProductItems = {
