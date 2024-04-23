@@ -12,7 +12,7 @@ export function putCart(
 
 	return fetch(`${URL_API}/api/carts/${id}`, {
 		method: "PUT",
-		cache: "reload",
+		cache: "no-cache",
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${jwt}`,

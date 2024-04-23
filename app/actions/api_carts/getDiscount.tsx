@@ -1,11 +1,13 @@
 "use client";
 
-import { type ResponseCart, URL_API } from "../../types";
+import { type ResponseDiscount, URL_API } from "../../types";
 
-export function getCartsJwt(jwt: string): Promise<ResponseCart> | undefined {
+export function getDiscount(
+	jwt: string,
+): Promise<ResponseDiscount> | undefined {
 	if (jwt === undefined) return;
 
-	return fetch(`${URL_API}/api/carts?`, {
+	return fetch(`${URL_API}/api/discount-codes/`, {
 		cache: "no-cache",
 		headers: {
 			Authorization: `Bearer ${jwt}`,

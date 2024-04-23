@@ -11,7 +11,7 @@ export function postCart(
 
 	return fetch(`${URL_API}/api/carts`, {
 		method: "POST",
-		cache: "reload",
+		cache: "no-cache",
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${jwt}`,
@@ -20,7 +20,7 @@ export function postCart(
 	}).then((res) => {
 		if (res.ok) {
 			console.log("create thanh cong");
-			alert("Thêm sản phẩm thành công!")
+			alert("Thêm sản phẩm thành công!");
 			window.location.reload();
 			return res.json();
 		}

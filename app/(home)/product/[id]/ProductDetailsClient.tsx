@@ -50,10 +50,12 @@ export default function ProductDetailsClient({
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
+		console.log(product);
+
 		if (!variationOptions) return;
 		const _: variationOptions[] = [];
-		product.data.attributes.product_items.data.forEach((item) => {
-			item.attributes.product_config.data.forEach((variation) => {
+		product.data.attributes.product_items?.data.forEach((item) => {
+			item.attributes.product_config?.data.forEach((variation) => {
 				const variation_id = variation.attributes.variation.data.id;
 				const element = _.find((item) => item.id === variation_id);
 				if (!element) {

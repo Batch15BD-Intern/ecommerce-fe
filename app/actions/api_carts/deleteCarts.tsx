@@ -10,7 +10,7 @@ export function deleteCart(
 
 	return fetch(`${URL_API}/api/carts/${id}`, {
 		method: "DELETE",
-		cache: "reload",
+		cache: "no-cache",
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${jwt}`,

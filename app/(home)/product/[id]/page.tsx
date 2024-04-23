@@ -24,12 +24,13 @@ export default async function ProductDetailPage({ params }: Props) {
 					/>
 					<div className="flex flex-col">
 						<table className="">
-							{Object.keys(product_attributes).map((key) => (
-								<tr key={key}>
-									<td className="line-clamp-1">{key}</td>
-									<td>{product_attributes[key]}</td>
-								</tr>
-							))}
+							{product_attributes &&
+								Object.keys(product_attributes).map((key) => (
+									<tr key={key}>
+										<td className="line-clamp-1">{key}</td>
+										<td>{product_attributes[key]}</td>
+									</tr>
+								))}
 						</table>
 					</div>
 				</div>

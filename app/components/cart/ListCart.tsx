@@ -1,22 +1,26 @@
 import { CgTrash } from "react-icons/cg";
 import { useState, useEffect } from "react";
 import { Typography, Input, Button } from "@material-tailwind/react";
-import Link from "next/link";
 import { getCartsJwt } from "../../actions/api_carts/getCarts";
 import { useAuth } from "../../hooks/useAuth";
-import { E_InputCounter } from "@/app/enum";
-import type { ResponseCart } from "../../types";
+import type { ResponseCart, ResponseDiscount } from "../../types";
 import Counter from "./CounterinCart";
 import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
+import { getDiscount } from "@/app/actions/api_carts/getDiscount";
 
 export default function ListCart() {
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
+	const [discount, setDiscount] = useState<ResponseDiscount | null>(null);
 	const [quantity, setQuantity] = useState(1);
 	const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
 	const { jwt } = useAuth();
 	const [voucher, setVoucher] = useState("");
-	const onChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+	const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(
+		null,
+	);
+	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setVoucher(event.target.value);
+	};
 
 	const handleQuantityChange = (productId: number, newQuantity: number) => {
 		setQuantities((prevQuantities) => ({
@@ -34,11 +38,30 @@ export default function ListCart() {
 				totalPrice += productPrice * quantity;
 			});
 		}
-		return totalPrice.toLocaleString();
+		return totalPrice;
 	};
 	const handleDelete = (id: number) => {
 		deleteCart(id, jwt);
 	};
+	const handleAddDiscount = () => {
+		getDiscount(jwt)?.then((res) => {
+			if (res?.data) {
+				const selectedDiscount = res.data.find(
+					(item) => item.attributes.discount_code === voucher,
+				);
+				if (selectedDiscount) {
+					setDiscount(res);
+					setSelectedDiscountId(selectedDiscount.id);
+				} else {
+					alert("Mã giảm giá không tồn tại!");
+					window.location.reload();
+				}
+			} else {
+				alert("Mã giảm giá không tồn tại!");
+			}
+		});
+	};
+
 	useEffect(() => {
 		if (!carts) return;
 		const initialQuantity = carts.data.length > 0 ? carts.data[0].quantity : 1;
@@ -189,27 +212,61 @@ export default function ListCart() {
 											placeholder=""
 											onPointerEnterCapture={() => {}}
 											onPointerLeaveCapture={() => {}}
+											onClick={handleAddDiscount}
 										>
 											Áp dụng
 										</Button>
 									</div>
 								</div>
 							</div>
+
 							<div className="col-span-4 border border-gray-200 p-4 rounded bg-gray-200 ">
 								<div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
 									<p>Tạm tính</p>
-									<p>{calculateTotalPrice()} đ</p>
+									<p>{calculateTotalPrice().toLocaleString()} đ</p>
 								</div>
-
-								<div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
-									<p>Giảm giá</p>
-									<p>Free</p>
-								</div>
-
-								<div className="flex justify-between text-gray-800 font-medium py-3 uppercas">
-									<p className="font-semibold">Tổng tiền</p>
-									<p>$1280</p>
-								</div>
+								{discount?.data
+									.filter((item) => item.id === selectedDiscountId)
+									.map((item) => (
+										// biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
+										<>
+											<div
+												className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas"
+												key={item.id}
+											>
+												<p>Loại giảm giá</p>
+												{item.attributes.type}
+											</div>
+											<div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
+												<p>Tiền giảm</p>
+												{item.attributes.type === "percentage"
+													? `- ${(
+															item.attributes.discount_amount *
+															calculateTotalPrice()
+														).toLocaleString()} đ`
+													: `- ${item.attributes.discount_amount.toLocaleString()} đ`}
+											</div>
+											<div className="flex justify-between text-gray-800 font-medium py-3 uppercas">
+												<p className="font-semibold">Tổng tiền</p>
+												<p>
+													{item.attributes.type === "percentage"
+														? ` ${(
+																calculateTotalPrice() -
+																(discount?.data.find(
+																	(item) => item.id === selectedDiscountId,
+																)?.attributes.discount_amount || 0) *
+																	calculateTotalPrice()
+															).toLocaleString()}đ`
+														: ` ${(
+																calculateTotalPrice() -
+																(discount?.data.find(
+																	(item) => item.id === selectedDiscountId,
+																)?.attributes.discount_amount || 0)
+															).toLocaleString()}đ`}
+												</p>
+											</div>
+										</>
+									))}
 
 								<Button
 									size="md"
