@@ -36,11 +36,15 @@ export default function ListCart() {
 		}
 		return totalPrice.toLocaleString();
 	};
+	const handleDelete = (id: number) => {
+		deleteCart(id, jwt);
+	};
 	useEffect(() => {
 		if (!carts) return;
 		const initialQuantity = carts.data.length > 0 ? carts.data[0].quantity : 1;
 		setQuantity(initialQuantity);
 	}, [carts]);
+
 	useEffect(() => {
 		getCartsJwt(jwt)?.then((res) => {
 			setCarts(res);
@@ -144,7 +148,10 @@ export default function ListCart() {
 													</Typography>
 												</td>
 												<td className="text-center">
-													<CgTrash className="text-sm mx-auto text-red-500 h-6 w-6 cursor-pointer " />
+													<CgTrash
+														onClick={() => handleDelete(item.id)}
+														className="text-sm mx-auto text-red-500 h-6 w-6 cursor-pointer "
+													/>
 												</td>
 											</tr>
 										))}

@@ -64,19 +64,9 @@ export default function IconCart() {
 			setCarts(res);
 		});
 	}, [jwt]);
-	const updateCartList = async () => {
-		try {
-			getCartsJwt(jwt)?.then((res) => {
-				setCarts(res);
-			});
-		} catch (error) {
-			console.error("Error fetching data:", error);
-		}
-	};
 
 	const handleDelete = (id: number) => {
-		const deleteproduct = deleteCart(id, jwt);
-		updateCartList();
+		deleteCart(id, jwt);
 	};
 
 	return (
