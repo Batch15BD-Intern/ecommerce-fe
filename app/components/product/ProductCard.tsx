@@ -15,6 +15,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
 		product.attributes.product_items.data,
 	);
 
+	if (!product.attributes.image.data) {
+		return;
+	}
+
 	return (
 		<div
 			className="w-[190px] h-[286px] cursor-pointer rounded-sm 

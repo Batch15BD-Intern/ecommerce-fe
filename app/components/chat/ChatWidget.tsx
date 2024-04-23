@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/app/hooks/useAuth";
+import { URL_API } from "@/app/types";
 import React, { useEffect } from "react";
 import { BsChatRightDots } from "react-icons/bs";
 import { io } from "socket.io-client";
@@ -19,6 +20,7 @@ const HelpWidget = () => {
 	const [reply, setReply] = React.useState(0);
 	const [text, setText] = React.useState("");
 	const [messages, setMessages] = React.useState<TMessage[]>([]);
+	let welcome: { username: any; message: any };
 
 	const handleCloseWidget = () => {
 		setIsOpen(false);
@@ -36,7 +38,7 @@ const HelpWidget = () => {
 		e.preventDefault();
 
 		socket.emit("sendMessage", {
-			username: user?.username,
+			username: user === undefined ? "Unknown" : user.username,
 			message: text,
 		});
 
@@ -48,21 +50,53 @@ const HelpWidget = () => {
 	}, []);
 
 	async function socketInitializer() {
-		// await fetch("http://localhost:3000");
+		socket = io(URL_API);
 
-		socket = io("http://localhost:1337");
+		socket.emit(
+			"join",
+			{ username: user === undefined ? "Unknown" : user.username },
+			(error: any) => {
+				//Sending the username to the backend as the user connects.
+				if (error) return alert(error);
+			},
+		);
 
-		socket.emit("join", { username: user?.username }, (error: any) => {
-			//Sending the username to the backend as the user connects.
-			if (error) return alert(error);
-		});
+		socket.on(
+			"welcome",
+			async (data: { username: any; message: any }, error: any) => {
+				//Getting the welcome message from the backend
+				const welcomeMessage = {
+					username: data.username,
+					message: data.message,
+				};
+				welcome = welcomeMessage;
+				setMessages([welcomeMessage]); //Storing the Welcome Message
+				await fetch(`${URL_API}/api/messages`) //Fetching all messages from Strapi
+					// await fetch(`http://localhost:1337/api/messages`) //Fetching all messages from Strapi
+					.then(async (res) => {
+						const response = await res.json();
+						let arr: TMessage[] = [welcome];
+						response.data.map((one: { attributes: TMessage }, i: any) => {
+							arr = [...arr, one.attributes];
+							setMessages((msgs) => arr); // Storing all Messages in a state variable
+						});
+					})
+					.catch((e) => console.log(e.message));
+			},
+		);
 
-		socket.on("welcome", async (data: TMessage, error: any) => {
-			setMessages((pre) => [...pre, data]);
-		});
-
-		socket.on("message", (data: TMessage) => {
-			setMessages((pre) => [...pre, data]);
+		socket.on("message", async (data: TMessage) => {
+			await fetch(`${URL_API}/api/messages`)
+				// await fetch(`http://localhost:1337/api/messages`) //Fetching all messages from Strapi
+				.then(async (res) => {
+					const response = await res.json();
+					let arr: TMessage[] = [welcome];
+					response.data.map((one: { attributes: TMessage }, i: any) => {
+						arr = [...arr, one.attributes];
+						setMessages((msgs) => arr);
+					});
+				})
+				.catch((e) => console.log(e.message));
 		});
 	}
 

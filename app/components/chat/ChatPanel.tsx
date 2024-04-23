@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useAuth } from "@/app/hooks/useAuth";
+import { useEffect, useRef } from "react";
 import type { TMessage } from "./ChatWidget";
 
 export const ChatPanel = ({
@@ -16,12 +17,15 @@ export const ChatPanel = ({
 	onClose?: () => void;
 	setText: (newText: string) => void;
 }) => {
+	const { user } = useAuth();
+
+	const messagesEndRef = useRef<any>(null);
+	const scrollToBottom = () => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }); //Scroll to bottom functionality.
+	};
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		const messageList = document.querySelector("#messages");
-		if (messageList) {
-			messageList.scrollTop = messageList.scrollHeight;
-		}
+		scrollToBottom();
 	}, [messages]);
 
 	return (
@@ -38,12 +42,15 @@ export const ChatPanel = ({
 			<ul id={"messages"} className="h-[300px] overflow-auto">
 				{messages.map(({ message, username }, index) => (
 					<li
+						ref={messagesEndRef}
 						className={`mb-2 rounded p-1 ${
-							username === "client" ? "bg-gray-50 text-end pr-4" : "bg-blue-200"
+							username === user?.username
+								? "bg-gray-50 text-end pr-4"
+								: "bg-blue-200"
 						}`}
 						key={index}
 					>
-						{message}
+						{username === user?.username ? <></> : <>{username}: </>} {message}
 					</li>
 				))}
 			</ul>

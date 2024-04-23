@@ -1,4 +1,5 @@
 export const URL_API = "https://ecommerce.zeabur.app";
+// export const URL_API = "http://localhost:1337";
 
 export type ResponseAuth = {
 	jwt: string;
