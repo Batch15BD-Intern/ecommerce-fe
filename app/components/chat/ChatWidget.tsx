@@ -1,18 +1,20 @@
 "use client";
 
+import { useAuth } from "@/app/hooks/useAuth";
 import React, { useEffect } from "react";
 import { BsChatRightDots } from "react-icons/bs";
 import { io } from "socket.io-client";
 import ChatPanel from "./ChatPanel";
 
 export type TMessage = {
+	username: string;
 	message: string;
-	sender: string;
 };
 
 let socket: any;
 
 const HelpWidget = () => {
+	const { user } = useAuth();
 	const [isOpen, setIsOpen] = React.useState(false);
 	const [reply, setReply] = React.useState(0);
 	const [text, setText] = React.useState("");
@@ -33,8 +35,8 @@ const HelpWidget = () => {
 		// setText("");
 		e.preventDefault();
 
-		socket.emit("send-message", {
-			username: "Hallo",
+		socket.emit("sendMessage", {
+			username: user?.username,
 			message: text,
 		});
 
@@ -46,11 +48,20 @@ const HelpWidget = () => {
 	}, []);
 
 	async function socketInitializer() {
-		await fetch("/api/socket");
+		// await fetch("http://localhost:3000");
 
-		socket = io();
+		socket = io("http://localhost:1337");
 
-		socket.on("receive-message", (data: TMessage) => {
+		socket.emit("join", { username: user?.username }, (error: any) => {
+			//Sending the username to the backend as the user connects.
+			if (error) return alert(error);
+		});
+
+		socket.on("welcome", async (data: TMessage, error: any) => {
+			setMessages((pre) => [...pre, data]);
+		});
+
+		socket.on("message", (data: TMessage) => {
 			setMessages((pre) => [...pre, data]);
 		});
 	}

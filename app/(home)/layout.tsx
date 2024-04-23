@@ -5,6 +5,7 @@ import { roboto } from "@/app/fonts";
 import "@/app/globals.css";
 import type { Metadata } from "next";
 import React, { Suspense, type ReactNode } from "react";
+import ChatWidget from "../components/chat/ChatWidget";
 
 export const metadata: Metadata = {
 	title: "Home",
@@ -23,6 +24,7 @@ export default function RootLayout({
 					facebook={"https://www.facebook.com/hoang3409"}
 					instagram={"https://www.instagram.com/?hl=en"}
 				/>
+				<ChatWidget />
 				<Suspense fallback={<Loader />}>
 					<div className="m-auto max-w-[1200px]">{children}</div>
 				</Suspense>

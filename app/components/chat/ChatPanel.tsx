@@ -36,10 +36,10 @@ export const ChatPanel = ({
 			)}
 
 			<ul id={"messages"} className="h-[300px] overflow-auto">
-				{messages.map(({ message, sender }, index) => (
+				{messages.map(({ message, username }, index) => (
 					<li
 						className={`mb-2 rounded p-1 ${
-							sender === "client" ? "bg-gray-50 text-end pr-4" : "bg-blue-200"
+							username === "client" ? "bg-gray-50 text-end pr-4" : "bg-blue-200"
 						}`}
 						key={index}
 					>
