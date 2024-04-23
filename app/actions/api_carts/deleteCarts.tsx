@@ -21,7 +21,6 @@ export function deleteCart(
 			if (res.ok) {
 				console.log("delete thanh cong");
 				alert("Xóa sản phẩm thành công!");
-				window.location.reload();
 				return res.json();
 			}
 			console.log(

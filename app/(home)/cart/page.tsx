@@ -3,6 +3,7 @@
 import { getCartsJwt } from "@/app/actions/api_carts/getCarts";
 import { useEffect } from "react";
 import { useAuth } from "@/app/hooks/useAuth";
+import ListCart from "@/app/components/cart/ListCart";
 
 const CartPage = () => {
 	const { jwt } = useAuth();
@@ -12,7 +13,11 @@ const CartPage = () => {
 		console.log(carts);
 	});
 
-	return <div></div>;
+	return (
+		<div>
+			<ListCart />
+		</div>
+	);
 };
 
 export default CartPage;

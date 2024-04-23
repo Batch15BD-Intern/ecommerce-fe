@@ -11,7 +11,6 @@ import Link from "next/link";
 import { CgShoppingCart, CgTrash } from "react-icons/cg";
 import { getCartsJwt } from "../../actions/api_carts/getCarts";
 import { useAuth } from "../../hooks/useAuth";
-import { E_InputCounter } from "@/app/enum";
 import type { ResponseCart } from "../../types";
 import Counter from "./CounterinCart";
 import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
@@ -25,15 +24,7 @@ export default function IconCart() {
 	const handleMouseEnter = () => setOpenPopover(true);
 	const handleMouseLeave = () => setOpenPopover(false);
 	const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
-	const handleQuantity = (type: E_InputCounter) => {
-		if (type === E_InputCounter.DECREMENT) {
-			if (quantity > 1) {
-				setQuantity(quantity - 1);
-			}
-		} else {
-			setQuantity(quantity + 1);
-		}
-	};
+
 	const handleQuantityChange = (productId: number, newQuantity: number) => {
 		setQuantities((prevQuantities) => ({
 			...prevQuantities,
@@ -73,9 +64,19 @@ export default function IconCart() {
 			setCarts(res);
 		});
 	}, [jwt]);
+	const updateCartList = async () => {
+		try {
+			getCartsJwt(jwt)?.then((res) => {
+				setCarts(res);
+			});
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
+	};
 
 	const handleDelete = (id: number) => {
 		const deleteproduct = deleteCart(id, jwt);
+		updateCartList();
 	};
 
 	return (

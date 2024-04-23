@@ -1,5 +1,6 @@
 "use client";
 
+import { getCartsJwt } from "@/app/actions/api_carts/getCarts";
 import { postCart } from "@/app/actions/api_carts/postCart";
 import getInventoryByProductItem from "@/app/actions/getInventoryByProductItem";
 import MyButton from "@/app/components/Button";
@@ -7,7 +8,7 @@ import InputCounter from "@/app/components/InputCounter";
 import ProductGallery from "@/app/components/product/ProductGallery";
 import { E_InputCounter } from "@/app/enum";
 import { useAuth } from "@/app/hooks/useAuth";
-import type { ResponseProductDetails } from "@/app/types";
+import type { ResponseCart, ResponseProductDetails } from "@/app/types";
 import getMinMaxPrice from "@/app/utility/getMinMaxPrice";
 import { useEffect, useState } from "react";
 import { BsCartPlus } from "react-icons/bs";
@@ -46,7 +47,7 @@ export default function ProductDetailsClient({
 		product.data.attributes.product_items.data,
 	);
 	const { jwt } = useAuth();
-
+	const [carts, setCarts] = useState<ResponseCart | null>(null);
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (!variationOptions) return;
@@ -147,9 +148,31 @@ export default function ProductDetailsClient({
 			(item) => item.id === variation.id && item.value === variation.value,
 		);
 	};
+	useEffect(() => {
+		getCartsJwt(jwt)?.then((res) => {
+			setCarts(res);
+		});
+	}, [jwt]);
 
 	const handleAddCart = () => {
-		const carts = postCart(jwt, quantity, productItem);
+		if (!carts || !carts.data) {
+			return;
+		}
+
+		let isItemInCart = false;
+
+		carts.data.forEach((item: any) => {
+			if (item.product_item.id === productItem) {
+				isItemInCart = true;
+				return;
+			}
+		});
+
+		if (isItemInCart) {
+			alert("Sản phẩm đã có trong giỏ hàng");
+		} else {
+			postCart(jwt, quantity, productItem);
+		}
 	};
 
 	return (
