@@ -1,11 +1,14 @@
 "use client";
 
+import { getCartsJwt } from "@/app/actions/api_carts/getCarts";
+import { postCart } from "@/app/actions/api_carts/postCart";
 import getInventoryByProductItem from "@/app/actions/getInventoryByProductItem";
 import MyButton from "@/app/components/Button";
 import InputCounter from "@/app/components/InputCounter";
 import ProductGallery from "@/app/components/product/ProductGallery";
 import { E_InputCounter } from "@/app/enum";
-import type { ResponseProductDetails } from "@/app/types";
+import { useAuth } from "@/app/hooks/useAuth";
+import type { ResponseCart, ResponseProductDetails } from "@/app/types";
 import getMinMaxPrice from "@/app/utility/getMinMaxPrice";
 import { useEffect, useState } from "react";
 import { BsCartPlus } from "react-icons/bs";
@@ -43,13 +46,15 @@ export default function ProductDetailsClient({
 	const { minPrice, maxPrice } = getMinMaxPrice(
 		product.data.attributes.product_items.data,
 	);
-
+	const { jwt } = useAuth();
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [carts, setCarts] = useState<ResponseCart | null>(null);
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
 		if (!variationOptions) return;
 		const _: variationOptions[] = [];
-		product.data.attributes.product_items.data.forEach((item) => {
-			item.attributes.product_config.data.forEach((variation) => {
+		product.data.attributes.product_items?.data.forEach((item) => {
+			item.attributes.product_config?.data.forEach((variation) => {
 				const variation_id = variation.attributes.variation.data.id;
 				const element = _.find((item) => item.id === variation_id);
 				if (!element) {
@@ -134,7 +139,7 @@ export default function ProductDetailsClient({
 
 	useEffect(() => {
 		if (productItem === -1) return;
-		getInventoryByProductItem(productItem).then((quantity) => {
+		getInventoryByProductItem(productItem).then((quantity: any) => {
 			setInventory(quantity.quantity);
 		});
 	}, [productItem]);
@@ -143,6 +148,55 @@ export default function ProductDetailsClient({
 		return selectedVariation.find(
 			(item) => item.id === variation.id && item.value === variation.value,
 		);
+	};
+	useEffect(() => {
+		if (!jwt) {
+			console.log("JWT is undefined. Please log in to make a purchase.");
+			return;
+		}
+		setIsLoggedIn(!!jwt);
+
+		getCartsJwt(jwt)?.then((res) => {
+			setCarts(res);
+		});
+	}, [jwt]);
+	const isProductExist = async (productItem_id: number) => {
+		const inventory = await getInventoryByProductItem(productItem_id);
+		return !!inventory.quantity;
+	};
+	const handleAddCart = async () => {
+		if (isLoggedIn) {
+			if (!carts || !carts.data) {
+				return;
+			}
+
+			if (productItem === null) {
+				alert("Sản phẩm không tồn tại.");
+				return;
+			}
+
+			const isItemInCart = carts.data.some((item: any) => {
+				return item.product_item.id === productItem;
+			});
+
+			if (isItemInCart) {
+				alert("Sản phẩm đã có trong giỏ hàng");
+				return;
+			}
+			const isExist = await isProductExist(productItem);
+			console.log(`handleAddCart  productItem:`, productItem);
+
+			if (!isExist) {
+				alert("Sản phẩm không tồn tại.");
+				return;
+			}
+
+			if (!jwt) return;
+
+			postCart(jwt, quantity, productItem);
+		} else {
+			alert("Vui lòng đăng nhập trước khi thêm sản phẩm!");
+		}
 	};
 
 	return (
@@ -205,6 +259,7 @@ export default function ProductDetailsClient({
 						outline-offset-0 outline-[#ee4d2d]"
 						label="Thêm vào giỏ hàng"
 						icon={<BsCartPlus />}
+						onClick={handleAddCart}
 					/>
 					<MyButton
 						className="bg-[#ee4d2d] text-medium text-white

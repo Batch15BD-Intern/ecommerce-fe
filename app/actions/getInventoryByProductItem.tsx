@@ -8,5 +8,8 @@ export default async function getInventoryByProductItem(
 }> {
 	return await fetch(
 		`${URL_API}/api/inventory/product-item/${product_item_id}`,
+		{
+			cache: "no-cache",
+		},
 	).then((res) => res.json());
 }

@@ -16,6 +16,35 @@ export type ResponseError = {
 	};
 };
 
+export type ResponseCart = {
+	data: [
+		{
+			id: number;
+			quantity: number;
+			product_item: ProductItemsCart;
+		},
+	];
+	error: {
+		status: number;
+		name: string;
+		message: string;
+		details: {};
+	};
+};
+export type ResponseDiscount = {
+	data: [
+		{
+			id: number;
+			attributes: {
+				discount_code: string;
+				discount_amount: number;
+				expiration_date: Date;
+				type: string;
+			};
+		},
+	];
+};
+
 export type GetAccessTokenResponse = {
 	jwt: string;
 	user: User;
@@ -52,18 +81,36 @@ export type ProductDetails = {
 		brand: { data: Brand };
 		category: { data: Category };
 		image: { data: Image };
-		product_items: { data: ProductItems[] };
+		product_items: {
+			id(jwt: string, quantity: number, id: any): unknown;
+			data: ProductItems[];
+		};
 	};
 };
 
 export type ProductItems = {
 	id: number;
 	attributes: {
+		name: string;
 		price: number;
 		quantity: number;
 		image: { data: Image[] };
 		product_config: { data: ProductConfig[] };
 	};
+};
+export type ProductItemsCart = {
+	id: number;
+	price: number;
+	name: string;
+	image: [
+		{
+			formats: {
+				small: ImageFormats;
+				medium: ImageFormats;
+				thumbnail: ImageFormats;
+			};
+		},
+	];
 };
 
 export type ProductConfig = {

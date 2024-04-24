@@ -39,7 +39,9 @@ export default async function getProductDetails(
 		},
 	});
 
-	return fetch(`${URL_API}/api/products/${id}?${query}`).then((res) => {
+	return fetch(`${URL_API}/api/products/${id}?${query}`, {
+		cache: "no-cache",
+	}).then((res) => {
 		if (res.ok) {
 			return res.json();
 		}
