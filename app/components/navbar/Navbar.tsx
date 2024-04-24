@@ -82,6 +82,10 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 		setIsClient(true);
 	}, []);
 
+	function goToProfile() {
+		route.push("/profile");
+	}
+
 	return (
 		<div className="top-0 w-full bg-gradient-to-r from-[#f53d2d] to-[#f63] z-100 flex flex-col items-center">
 			<div className="w-[1200px] flex justify-between text-white text-sm">
@@ -106,7 +110,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					<div>Ngôn ngữ</div>
 					<div>
 						{isClient && user ? (
-							<div onClick={logout}>{user.username}</div>
+							<div onClick={goToProfile}>{user.username}</div>
 						) : (
 							<div className="flex gap-2">
 								<Link href={"/auth"}>Đăng ký</Link>
