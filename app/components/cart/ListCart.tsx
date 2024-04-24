@@ -1,12 +1,12 @@
+import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
+import { getDiscount } from "@/app/actions/api_carts/getDiscount";
+import { Button, Input, Typography } from "@material-tailwind/react";
+import { useEffect, useState } from "react";
 import { CgTrash } from "react-icons/cg";
-import { useState, useEffect } from "react";
-import { Typography, Input, Button } from "@material-tailwind/react";
 import { getCartsJwt } from "../../actions/api_carts/getCarts";
 import { useAuth } from "../../hooks/useAuth";
 import type { ResponseCart, ResponseDiscount } from "../../types";
-import Counter from "./CounterinCart";
-import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
-import { getDiscount } from "@/app/actions/api_carts/getDiscount";
+import Counter from "./CounterInCart";
 
 export default function ListCart() {
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
@@ -42,9 +42,13 @@ export default function ListCart() {
 		return totalPrice;
 	};
 	const handleDelete = (id: number) => {
+		if (!jwt) return;
+
 		deleteCart(id, jwt);
 	};
 	const handleAddDiscount = () => {
+		if (!jwt) return;
+
 		getDiscount(jwt)?.then((res) => {
 			if (res?.data) {
 				const selectedDiscount = res.data.find(

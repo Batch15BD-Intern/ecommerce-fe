@@ -1,5 +1,6 @@
-// export const URL_API = "https://ecommerce.zeabur.app";
-export const URL_API = "http://localhost:1337";
+export const URL_API = "https://ecommerce.zeabur.app";
+// export const URL_API = "http://localhost:1337";
+
 export type ResponseAuth = {
 	jwt: string;
 	user: User;
@@ -63,12 +64,12 @@ export type User = {
 
 export type ResponseListingProduct = {
 	data: Product[];
-	meta: Meta;
+	meta: { pagination: Pagination };
 };
 
 export type ResponseProductDetails = {
 	data: ProductDetails;
-	meta: Meta;
+	meta: { pagination: Pagination };
 };
 
 export type ProductDetails = {
@@ -77,11 +78,9 @@ export type ProductDetails = {
 		name: string;
 		description: string;
 		attributes: object;
-		brand: Brand;
-		category: Category;
-		image: {
-			data: Image;
-		};
+		brand: { data: Brand };
+		category: { data: Category };
+		image: { data: Image };
 		product_items: {
 			id(jwt: string, quantity: number, id: any): unknown;
 			data: ProductItems[];
@@ -95,12 +94,8 @@ export type ProductItems = {
 		name: string;
 		price: number;
 		quantity: number;
-		image: {
-			data: Image[];
-		};
-		product_config: {
-			data: ProductConfig[];
-		};
+		image: { data: Image[] };
+		product_config: { data: ProductConfig[] };
 	};
 };
 export type ProductItemsCart = {
@@ -138,34 +133,43 @@ export type Product = {
 	attributes: {
 		name: string;
 		physical_product: boolean;
-		category: Category;
-		brand: Brand;
-		product_items: {
-			data: ProductItems[];
-		};
-		image: {
-			data: Image;
-		};
+		featured: string;
+		category: { data: Category };
+		brand: { data: Brand };
+		product_items: { data: ProductItems[] };
+		image: { data: Image };
 	};
 };
 
 export type Category = {
-	data: {
-		id: number;
-		attributes: {
-			name: string;
-			locale: string;
-			parent_category: Category;
-		};
+	id: number;
+	attributes: {
+		name: string;
+		locale: string;
+		parent_category: Category;
+		variations: { data: Variation[] };
+	};
+};
+
+export type Variation = {
+	id: number;
+	attributes: {
+		name: string;
+		variation_options: { data: VariationOptions[] };
+	};
+};
+
+export type VariationOptions = {
+	id: number;
+	attributes: {
+		value: string;
 	};
 };
 
 export type Brand = {
-	data: {
-		id: number;
-		attributes: {
-			name: string;
-		};
+	id: number;
+	attributes: {
+		name: string;
 	};
 };
 
@@ -189,10 +193,6 @@ export type ImageFormats = {
 	height: number;
 };
 
-export type Meta = {
-	pagination: Pagination;
-};
-
 export type Pagination = {
 	page: number;
 	pageSize: number;
@@ -203,4 +203,15 @@ export type Pagination = {
 export type Gallery = {
 	id: number;
 	imgUrl: string;
+};
+
+export type SearchParams = {
+	query?: string;
+	minPrice?: number;
+	maxPrice?: number;
+	brand?: number;
+	categories?: number[];
+	stars?: number;
+	attribute?: string;
+	sort?: number;
 };

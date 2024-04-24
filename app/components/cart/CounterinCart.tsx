@@ -1,7 +1,6 @@
 import { putCart } from "@/app/actions/api_carts/putCart";
 import { useAuth } from "@/app/hooks/useAuth";
-import { Input } from "@material-tailwind/react";
-import { CgCPlusPlus, CgMathMinus, CgMathPlus } from "react-icons/cg";
+import { CgMathMinus, CgMathPlus } from "react-icons/cg";
 
 interface InputCounterProps {
 	quantity: number;
@@ -36,9 +35,9 @@ export default function Counter({
 		productitem: number,
 	) => {
 		try {
+			if (!jwt) return;
+
 			const response = await putCart(cartId, jwt, newQuantity, productitem);
-			//   window.location.reload();
-			console.log(response);
 
 			if (response?.error.status === 400) {
 				alert(response.error.message);

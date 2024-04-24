@@ -1,18 +1,19 @@
 "use client";
 
+import getAutocomplete from "@/app/actions/getAutocomplete";
+import type { Product } from "@/app/types";
+import { Button } from "@nextui-org/react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import qs from "qs";
+import { useEffect, useRef, useState } from "react";
 import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import Logo from "../Logo";
-import { getCartsJwt } from "@/app/actions/api_carts/getCarts";
-import type { ResponseCart } from "@/app/types";
 import IconCart from "../cart/IconCart";
-import { CgSearch } from "react-icons/cg";
 
 type NavbarProps = {
-	icon: string;
 	facebook: string;
 	instagram: string;
 };
@@ -23,22 +24,72 @@ type Props = {
 };
 
 export default function Navbar({ facebook, instagram }: NavbarProps) {
-	const { user, logout, jwt } = useAuth();
+	const { user, jwt } = useAuth();
+	const [isClient, setIsClient] = useState(false);
+	const [isSearchFocused, setIsSearchFocused] = useState(false);
+	const params = useSearchParams();
+	const route = useRouter();
 	const [search, setSearch] = useState<string>("");
-	const [carts, setCarts] = useState<ResponseCart | null>(null);
-	const [quantity, setQuantity] = useState(1);
+	const [autocomplete, setAutocomplete] = useState<Product[]>([]);
 
 	useEffect(() => {
-		if (!jwt) {
-			console.log("JWT is undefined. Please log in to make a purchase.");
+		setIsClient(true);
+	}, []);
+
+	function goToProfile() {
+		route.push("/profile");
+	}
+
+	const handle = (_query?: string) => {
+		setAutocomplete([]);
+		let current_query = {};
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+
+		if (search || _query) {
+			current_query = _query
+				? {
+						query: _query,
+					}
+				: {
+						query: search,
+					};
+		}
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	};
+
+	const autocompleteTimeoutRef = useRef<any>();
+	const handleAutocomplete = (query: string) => {
+		setSearch(query);
+		if (!query) {
+			setAutocomplete([]);
 			return;
 		}
 
-		getCartsJwt(jwt)?.then((res) => {
-			setCarts(res);
-		});
-	}, [jwt]);
-	const [isClient, setIsClient] = useState(false);
+		if (autocompleteTimeoutRef.current) {
+			clearTimeout(autocompleteTimeoutRef.current);
+		}
+
+		autocompleteTimeoutRef.current = setTimeout(() => {
+			if (!query) {
+				setAutocomplete([]);
+				return;
+			}
+			getAutocomplete(query).then((res) => {
+				setAutocomplete(res.data);
+			});
+		}, 650);
+	};
+
+	const handleSelectAutocomplete = (product: Product) => {
+		setAutocomplete([]);
+		setSearch(product.attributes.name);
+		handle(product.attributes.name);
+	};
 
 	useEffect(() => {
 		setIsClient(true);
@@ -68,7 +119,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					<div>Ngôn ngữ</div>
 					<div>
 						{isClient && user ? (
-							<div onClick={logout}>{user.username}</div>
+							<div onClick={goToProfile}>{user.username}</div>
 						) : (
 							<div className="flex gap-2">
 								<Link href={"/auth"}>Đăng ký</Link>
@@ -94,12 +145,31 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 							aria-expanded="false"
 							role="combobox"
 							value={search}
-							onChange={(e) => setSearch(e.target.value)}
+							onChange={(e) => handleAutocomplete(e.target.value)}
+							onFocus={() => setIsSearchFocused(true)}
+							onBlur={() => setIsSearchFocused(false)}
 						/>
-						<button className="bg-[#fb5533] px-[20px] h-[32px]">
-							<CgSearch className="text-white h-5 w-5" />
-						</button>
+						<Button
+							className="h-[32px] w-10 rounded-none bg-[#fb5533] outline-none"
+							onClick={() => handle()}
+							isIconOnly
+						>
+							<CiSearch className="text-white" />
+						</Button>
 					</div>
+					{isSearchFocused && (
+						<div className="absolute mt-2 flex flex-col w-[840px] z-50">
+							{autocomplete.map((item) => (
+								<div
+									className="cursor-pointer bg-white p-2"
+									key={item.id}
+									onClick={() => handleSelectAutocomplete(item)}
+								>
+									{item.attributes.name}
+								</div>
+							))}
+						</div>
+					)}
 				</div>
 				<IconCart />
 			</div>

@@ -182,17 +182,18 @@ export default function ProductDetailsClient({
 			if (isItemInCart) {
 				alert("Sản phẩm đã có trong giỏ hàng");
 				return;
-				// biome-ignore lint/style/noUselessElse: <explanation>
-			} else {
-				const isExist = await isProductExist(productItem);
-
-				if (!isExist) {
-					alert("Sản phẩm không tồn tại.");
-					return;
-				}
-
-				postCart(jwt, quantity, productItem);
 			}
+			const isExist = await isProductExist(productItem);
+			console.log(`handleAddCart  productItem:`, productItem);
+
+			if (!isExist) {
+				alert("Sản phẩm không tồn tại.");
+				return;
+			}
+
+			if (!jwt) return;
+
+			postCart(jwt, quantity, productItem);
 		} else {
 			alert("Vui lòng đăng nhập trước khi thêm sản phẩm!");
 		}

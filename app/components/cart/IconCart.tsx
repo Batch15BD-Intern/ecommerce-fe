@@ -1,19 +1,19 @@
 "use client";
-import { useState, useEffect } from "react";
+import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
 import {
-	Typography,
 	Badge,
 	Popover,
-	PopoverHandler,
 	PopoverContent,
+	PopoverHandler,
+	Typography,
 } from "@material-tailwind/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { CgShoppingCart, CgTrash } from "react-icons/cg";
 import { getCartsJwt } from "../../actions/api_carts/getCarts";
 import { useAuth } from "../../hooks/useAuth";
 import type { ResponseCart } from "../../types";
-import Counter from "./CounterinCart";
-import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
+import Counter from "./CounterInCart";
 
 export default function IconCart() {
 	const { jwt } = useAuth();
@@ -73,6 +73,7 @@ export default function IconCart() {
 	}, [jwt]);
 
 	const handleDelete = (id: number) => {
+		if (!jwt) return;
 		deleteCart(id, jwt);
 	};
 

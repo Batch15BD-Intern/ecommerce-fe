@@ -1,9 +1,12 @@
+import Footer from "@/app/components/Footer";
+import Loader from "@/app/components/Loader";
+import Navbar from "@/app/components/navbar/Navbar";
+import { roboto } from "@/app/fonts";
+import "@/app/globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
-import React, { type ReactNode } from "react";
-import Footer from "../components/Footer";
-import Navbar from "../components/navbar/Navbar";
-import { roboto } from "../fonts";
-import "../globals.css";
+import React, { Suspense, type ReactNode } from "react";
+import ChatWidget from "../components/chat/ChatWidget";
 
 export const metadata: Metadata = {
 	title: "Home",
@@ -18,14 +21,19 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${roboto.className} bg-gray-100`}>
-				<Navbar
-					icon={""}
-					facebook={"https://www.facebook.com/hoang3409"}
-					instagram={"https://www.instagram.com/?hl=en"}
-				/>
-				<div className="m-auto max-w-[1200px]">{children}</div>
+				<Suspense fallback={<Loader />}>
+					<Navbar
+						facebook={"https://www.facebook.com/hoang3409"}
+						instagram={"https://www.instagram.com/?hl=en"}
+					/>
+				</Suspense>
+				<ChatWidget />
+				<Suspense fallback={<Loader />}>
+					<div className="m-auto max-w-[1200px]">{children}</div>
+				</Suspense>
 				<Footer />
 			</body>
+			<GoogleAnalytics gaId="G-8WH5RY3SRX" />
 		</html>
 	);
 }
