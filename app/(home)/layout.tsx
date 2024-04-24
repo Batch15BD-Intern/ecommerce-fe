@@ -3,6 +3,7 @@ import Loader from "@/app/components/Loader";
 import Navbar from "@/app/components/navbar/Navbar";
 import { roboto } from "@/app/fonts";
 import "@/app/globals.css";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import React, { Suspense, type ReactNode } from "react";
 import ChatWidget from "../components/chat/ChatWidget";
@@ -30,6 +31,7 @@ export default function RootLayout({
 				</Suspense>
 				<Footer />
 			</body>
+			<GoogleAnalytics gaId="G-8WH5RY3SRX" />
 		</html>
 	);
 }
