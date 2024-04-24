@@ -20,7 +20,7 @@ export function putCart(
 		body: JSON.stringify({ data: { quantity, product_item } }),
 	}).then((res) => {
 		if (res.ok) {
-			window.location.reload();
+			// window.location.reload();
 			return res.json();
 		}
 

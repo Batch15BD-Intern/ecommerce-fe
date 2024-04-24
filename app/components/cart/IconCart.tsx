@@ -17,6 +17,7 @@ import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
 
 export default function IconCart() {
 	const { jwt } = useAuth();
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
 	const [quantity, setQuantity] = useState(1);
 
@@ -60,6 +61,12 @@ export default function IconCart() {
 	}, [carts]);
 
 	useEffect(() => {
+		if (!jwt) {
+			console.log("JWT is undefined. Please log in to make a purchase.");
+			return;
+		}
+		setIsLoggedIn(!!jwt);
+
 		getCartsJwt(jwt)?.then((res) => {
 			setCarts(res);
 		});
@@ -87,73 +94,82 @@ export default function IconCart() {
 				<PopoverContent
 					onMouseEnter={handleMouseEnter}
 					onMouseLeave={handleMouseLeave}
-					className="z-50 fixed h-[73%] w-[30%] overflow-auto resize-none"
+					className="z-50 fixed h-[500px] lg:w-[400px] md:w-[320px] sm:w-[320px] overflow-auto resize-none"
 					placeholder=""
 					onPointerEnterCapture={() => {}}
 					onPointerLeaveCapture={() => {}}
 				>
-					<div></div>
-					{carts?.data.map((item) => (
-						<div className="flex mb-3" key={item.id}>
-							<img
-								alt="ecommerce"
-								className="block object-cover object-center w-[27%] h-[27%]"
-								src={item.product_item.image[0].formats.thumbnail.url}
-							/>
-
-							<div className="p-2 w-full">
-								<Typography
-									color="blue-gray"
-									className="text-sm font-bold"
-									placeholder=""
-									onPointerEnterCapture={() => {}}
-									onPointerLeaveCapture={() => {}}
-								>
-									<span className=" line-clamp-1 w-[200px]">
-										{item.product_item.name}
-									</span>
-								</Typography>
-
-								<div className="flex">
-									<Typography
-										color="blue-gray"
-										className="text-sm mt-2"
-										placeholder=""
-										onPointerEnterCapture={() => {}}
-										onPointerLeaveCapture={() => {}}
-									>
-										{item.product_item.price.toLocaleString()}đ
-									</Typography>
-									<CgTrash
-										onClick={() => handleDelete(item.id)}
-										className="text-sm ml-auto text-red-500 h-6 w-6 cursor-pointer mt-3"
+					{isLoggedIn ? (
+						<>
+							{carts?.data.map((item) => (
+								<div className="flex mb-3" key={item.id}>
+									<img
+										alt="ecommerce"
+										className="block object-cover object-center w-[27%] h-[27%]"
+										src={item.product_item.image[0].formats.thumbnail.url}
 									/>
+
+									<div className="p-2 w-full">
+										<Typography
+											color="blue-gray"
+											className="text-sm font-bold"
+											placeholder=""
+											onPointerEnterCapture={() => {}}
+											onPointerLeaveCapture={() => {}}
+										>
+											<span className=" line-clamp-1 w-[200px]">
+												{item.product_item.name}
+											</span>
+										</Typography>
+
+										<div className="flex">
+											<Typography
+												color="blue-gray"
+												className="text-sm mt-2"
+												placeholder=""
+												onPointerEnterCapture={() => {}}
+												onPointerLeaveCapture={() => {}}
+											>
+												{item.product_item.price.toLocaleString()}đ
+											</Typography>
+											<CgTrash
+												onClick={() => handleDelete(item.id)}
+												className="text-sm ml-auto text-red-500 h-6 w-6 cursor-pointer mt-3"
+											/>
+										</div>
+										<Counter
+											cartId={item.id}
+											quantity={quantities[item.id] || item.quantity}
+											onQuantityChange={(newQuantity: number) =>
+												handleQuantityChange(item.id, newQuantity)
+											}
+											productitem={item.product_item.id}
+										/>
+										<Typography
+											color="blue-gray"
+											className="text-sm font-bold mt-3 text-black flex justify-end"
+											placeholder=""
+											onPointerEnterCapture={() => {}}
+											onPointerLeaveCapture={() => {}}
+										>
+											Tổng:{" "}
+											{(
+												item.product_item.price *
+												(quantities[item.id] || item.quantity)
+											).toLocaleString()}
+											đ
+										</Typography>
+									</div>
 								</div>
-								<Counter
-									cartId={item.id}
-									quantity={quantities[item.id] || item.quantity}
-									onQuantityChange={(newQuantity: number) =>
-										handleQuantityChange(item.id, newQuantity)
-									}
-									productitem={item.product_item.id}
-								/>
-								<Typography
-									color="blue-gray"
-									className="text-sm font-bold mt-3 text-black flex justify-end"
-									placeholder=""
-									onPointerEnterCapture={() => {}}
-									onPointerLeaveCapture={() => {}}
-								>
-									Tổng:{" "}
-									{(
-										item.product_item.price *
-										(quantities[item.id] || item.quantity)
-									).toLocaleString()}
-									đ
-								</Typography>
-							</div>
+							))}
+						</>
+					) : (
+						<div>
+							<h3 className="px-4 py-3 text-center text-red-600 font-semibold">
+								Vui lòng đăng nhập để có thể thêm sản phẩm vào giỏ hàng!
+							</h3>
 						</div>
-					))}
+					)}
 					<div className="mt-3 justify-center gap-8 border-t border-blue-50 pt-4">
 						<Typography
 							className="flex  gap-2 text-sm font-bold text-red-600 text-center"

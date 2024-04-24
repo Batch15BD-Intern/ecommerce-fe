@@ -3,7 +3,11 @@
 import { type ResponseCart, URL_API } from "../../types";
 
 export function getCartsJwt(jwt: string): Promise<ResponseCart> | undefined {
-	if (jwt === undefined) return;
+	if (jwt === undefined) {
+		console.log("JWT is undefined. Please log in to make a purchase.");
+		alert("Please log in to make a purchase.");
+		return;
+	}
 
 	return fetch(`${URL_API}/api/carts?`, {
 		cache: "no-cache",

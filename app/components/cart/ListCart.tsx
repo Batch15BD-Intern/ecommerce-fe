@@ -13,6 +13,7 @@ export default function ListCart() {
 	const [discount, setDiscount] = useState<ResponseDiscount | null>(null);
 	const [quantity, setQuantity] = useState(1);
 	const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { jwt } = useAuth();
 	const [voucher, setVoucher] = useState("");
 	const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(
@@ -69,6 +70,12 @@ export default function ListCart() {
 	}, [carts]);
 
 	useEffect(() => {
+		if (!jwt) {
+			console.log("JWT is undefined. Please log in to make a purchase.");
+			return;
+		}
+		setIsLoggedIn(!!jwt);
+
 		getCartsJwt(jwt)?.then((res) => {
 			setCarts(res);
 		});
@@ -80,14 +87,13 @@ export default function ListCart() {
 				<section className="text-gray-600 body-font">
 					<div className="container px-5 py-5 mx-auto flex flex-wrap">
 						<div className="flex flex-col flex-wrap px-5 py-6 lg:w-2/3 mr-2 -ml-2 bg-gray-100">
-							<div className=" w-full mx-auto ">
+							<div className="w-full mx-auto">
 								<table className="w-full text-left">
-									<thead>
+									<tbody>
 										<tr>
 											<th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
 												Products
 											</th>
-
 											<th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 text-center">
 												Quanlity
 											</th>
@@ -98,86 +104,98 @@ export default function ListCart() {
 												Actions
 											</th>
 										</tr>
-									</thead>
-									<tbody>
-										{carts?.data.map((item) => (
-											<tr key={item.id}>
-												<td className="px-4 py-3">
-													<div>
-														<div className="flex w-full mb-3">
-															<div className="p-2 w-full">
-																<div className="flex">
-																	<img
-																		alt="ecommerce"
-																		className="block object-cover object-center w-[27%] h-[27%]"
-																		src={
-																			item.product_item.image[0].formats
-																				.thumbnail.url
-																		}
-																	/>
-																	<div>
-																		<Typography
-																			color="blue-gray"
-																			className="text-sm font-bold"
-																			placeholder=""
-																			onPointerEnterCapture={() => {}}
-																			onPointerLeaveCapture={() => {}}
-																		>
-																			{item.product_item.name}
-																		</Typography>
-																		<Typography
-																			color="blue-gray"
-																			className="text-sm font-bold mt-4"
-																			placeholder=""
-																			onPointerEnterCapture={() => {}}
-																			onPointerLeaveCapture={() => {}}
-																		>
-																			{item.product_item.price.toLocaleString()}
-																			đ
-																		</Typography>
+
+										{isLoggedIn ? (
+											<>
+												{carts?.data.map((item) => (
+													<tr key={item.id}>
+														<td className="px-4 py-3">
+															<div>
+																<div className="flex w-full mb-3">
+																	<div className="p-2 w-full">
+																		<div className="flex">
+																			<img
+																				alt="ecommerce"
+																				className="block object-cover object-center w-[27%] h-[27%]"
+																				src={
+																					item.product_item.image[0].formats
+																						.thumbnail.url
+																				}
+																			/>
+																			<div>
+																				<Typography
+																					color="blue-gray"
+																					className="text-sm font-bold"
+																					placeholder=""
+																					onPointerEnterCapture={() => {}}
+																					onPointerLeaveCapture={() => {}}
+																				>
+																					{item.product_item.name}
+																				</Typography>
+																				<Typography
+																					color="blue-gray"
+																					className="text-sm font-bold mt-4"
+																					placeholder=""
+																					onPointerEnterCapture={() => {}}
+																					onPointerLeaveCapture={() => {}}
+																				>
+																					{item.product_item.price.toLocaleString()}
+																					đ
+																				</Typography>
+																			</div>
+																		</div>
 																	</div>
 																</div>
 															</div>
-														</div>
-													</div>
-												</td>
+														</td>
 
-												<td
-													className="px-4 py-3 text-center text-black"
-													defaultValue="2"
-												>
-													<Counter
-														cartId={item.id}
-														quantity={quantities[item.id] || item.quantity}
-														onQuantityChange={(newQuantity: number) =>
-															handleQuantityChange(item.id, newQuantity)
-														}
-														productitem={item.product_item.id}
-													/>
-												</td>
-												<td className="px-4 py-3">
-													<Typography
-														color="blue-gray"
-														className="text-sm font-bold ml-auto mt-1 text-black text-center"
-														placeholder=""
-														onPointerEnterCapture={() => {}}
-														onPointerLeaveCapture={() => {}}
-													>
-														{(
-															item.product_item.price *
-															(quantities[item.id] || item.quantity)
-														).toLocaleString()}
-														đ
-													</Typography>
-												</td>
-												<td className="text-center">
-													<CgTrash
-														onClick={() => handleDelete(item.id)}
-														className="text-sm mx-auto text-red-500 h-6 w-6 cursor-pointer "
-													/>
+														<td
+															className="px-4 py-3 text-center text-black"
+															defaultValue="2"
+														>
+															<Counter
+																cartId={item.id}
+																quantity={quantities[item.id] || item.quantity}
+																onQuantityChange={(newQuantity: number) =>
+																	handleQuantityChange(item.id, newQuantity)
+																}
+																productitem={item.product_item.id}
+															/>
+														</td>
+														<td className="px-4 py-3">
+															<Typography
+																color="blue-gray"
+																className="text-sm font-bold ml-auto mt-1 text-black text-center"
+																placeholder=""
+																onPointerEnterCapture={() => {}}
+																onPointerLeaveCapture={() => {}}
+															>
+																{(
+																	item.product_item.price *
+																	(quantities[item.id] || item.quantity)
+																).toLocaleString()}
+																đ
+															</Typography>
+														</td>
+														<td className="text-center">
+															<CgTrash
+																onClick={() => handleDelete(item.id)}
+																className="text-sm mx-auto text-red-500 h-6 w-6 cursor-pointer "
+															/>
+														</td>
+													</tr>
+												))}
+											</>
+										) : (
+											<tr>
+												<td colSpan={4}>
+													<h3 className="px-4 py-3 text-center text-red-600 font-semibold">
+														Vui lòng đăng nhập để có thể thêm sản phẩm vào giỏ
+														hàng!
+													</h3>
 												</td>
 											</tr>
-										))}
+										)}
 									</tbody>
 								</table>
 							</div>

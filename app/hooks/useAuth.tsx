@@ -42,5 +42,6 @@ export const useAuth = create<AuthStore>((set) => ({
 			jwt: "",
 			user: undefined,
 		});
+		window.location.reload();
 	},
 }));

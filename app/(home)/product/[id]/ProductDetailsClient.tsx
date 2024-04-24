@@ -47,11 +47,10 @@ export default function ProductDetailsClient({
 		product.data.attributes.product_items.data,
 	);
 	const { jwt } = useAuth();
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		console.log(product);
-
 		if (!variationOptions) return;
 		const _: variationOptions[] = [];
 		product.data.attributes.product_items?.data.forEach((item) => {
@@ -151,29 +150,51 @@ export default function ProductDetailsClient({
 		);
 	};
 	useEffect(() => {
+		if (!jwt) {
+			console.log("JWT is undefined. Please log in to make a purchase.");
+			return;
+		}
+		setIsLoggedIn(!!jwt);
+
 		getCartsJwt(jwt)?.then((res) => {
 			setCarts(res);
 		});
 	}, [jwt]);
-
-	const handleAddCart = () => {
-		if (!carts || !carts.data) {
-			return;
-		}
-
-		let isItemInCart = false;
-
-		carts.data.forEach((item: any) => {
-			if (item.product_item.id === productItem) {
-				isItemInCart = true;
+	const isProductExist = async (productItem_id: number) => {
+		const inventory = await getInventoryByProductItem(productItem_id);
+		return !!inventory.quantity;
+	};
+	const handleAddCart = async () => {
+		if (isLoggedIn) {
+			if (!carts || !carts.data) {
 				return;
 			}
-		});
 
-		if (isItemInCart) {
-			alert("Sản phẩm đã có trong giỏ hàng");
+			if (productItem === null) {
+				alert("Sản phẩm không tồn tại.");
+				return;
+			}
+
+			const isItemInCart = carts.data.some((item: any) => {
+				return item.product_item.id === productItem;
+			});
+
+			if (isItemInCart) {
+				alert("Sản phẩm đã có trong giỏ hàng");
+				return;
+				// biome-ignore lint/style/noUselessElse: <explanation>
+			} else {
+				const isExist = await isProductExist(productItem);
+
+				if (!isExist) {
+					alert("Sản phẩm không tồn tại.");
+					return;
+				}
+
+				postCart(jwt, quantity, productItem);
+			}
 		} else {
-			postCart(jwt, quantity, productItem);
+			alert("Vui lòng đăng nhập trước khi thêm sản phẩm!");
 		}
 	};
 

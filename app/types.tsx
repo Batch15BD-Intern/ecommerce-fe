@@ -1,6 +1,5 @@
 // export const URL_API = "https://ecommerce.zeabur.app";
 export const URL_API = "http://localhost:1337";
-
 export type ResponseAuth = {
 	jwt: string;
 	user: User;
@@ -24,6 +23,12 @@ export type ResponseCart = {
 			product_item: ProductItemsCart;
 		},
 	];
+	error: {
+		status: number;
+		name: string;
+		message: string;
+		details: {};
+	};
 };
 export type ResponseDiscount = {
 	data: [

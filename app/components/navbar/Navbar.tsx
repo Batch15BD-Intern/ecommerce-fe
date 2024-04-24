@@ -9,6 +9,7 @@ import Logo from "../Logo";
 import { getCartsJwt } from "@/app/actions/api_carts/getCarts";
 import type { ResponseCart } from "@/app/types";
 import IconCart from "../cart/IconCart";
+import { CgSearch } from "react-icons/cg";
 
 type NavbarProps = {
 	icon: string;
@@ -28,6 +29,11 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 	const [quantity, setQuantity] = useState(1);
 
 	useEffect(() => {
+		if (!jwt) {
+			console.log("JWT is undefined. Please log in to make a purchase.");
+			return;
+		}
+
 		getCartsJwt(jwt)?.then((res) => {
 			setCarts(res);
 		});
@@ -40,7 +46,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 
 	return (
 		<div className="top-0 w-full h-[50] bg-gradient-to-r from-[#f53d2d] to-[#f63] z-100 flex flex-col items-center">
-			<div className="w-[1200px] flex justify-between text-white text-sm">
+			<div className="2xl:w-[1200px] lg:w-[1000px] sm:w-[500px] md:w-[650px] flex justify-between text-white">
 				<div className="opacity-90 flex gap-2">
 					<span>Kênh Người Bán</span>
 					<span>Tải ứng dụng</span>
@@ -73,11 +79,11 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					</div>
 				</div>
 			</div>
-			<div className="w-[1200px] py-[16px] flex justify-around items-center">
-				<div className="h-[65px] w-[192px]">
+			<div className="2xl:w-[1200px] lg:w-[1000px] sm:w-[500px] md:w-[700px] py-[16px] flex justify-around items-center">
+				<div className="h-[60px] w-[160px]">
 					<Logo fill="white" />
 				</div>
-				<div className="w-[840px]">
+				<div className=" 2xl:w-[850px] lg:w-[600px] sm:w-[250px] md:w-[400px]">
 					<div className="px-[0.625rem] bg-white flex py-[7px]">
 						<input
 							className="w-full outline-none"
@@ -91,7 +97,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 							onChange={(e) => setSearch(e.target.value)}
 						/>
 						<button className="bg-[#fb5533] px-[20px] h-[32px]">
-							<CiSearch className="text-white" />
+							<CgSearch className="text-white h-5 w-5" />
 						</button>
 					</div>
 				</div>
