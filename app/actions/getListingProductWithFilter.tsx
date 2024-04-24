@@ -11,18 +11,20 @@ interface ProductFilter {
 	categories?: number[];
 	stars?: number;
 	attribute?: string;
+	sort?: number;
 }
 
 export default async function getListingProductWithFilter({
 	page = 1,
 	pageSize = 10,
 	minPrice = 0,
-	maxPrice = Number.MAX_SAFE_INTEGER,
+	maxPrice = 0,
 	brand,
 	query,
 	categories,
 	stars,
 	attribute,
+	sort,
 }: ProductFilter): Promise<ResponseListingProduct> {
 	const attributes = attribute as unknown as {
 		variation: number;
@@ -38,14 +40,10 @@ export default async function getListingProductWithFilter({
 				: { category: { id: { $in: categories } } }),
 			product_items: {
 				$and: [
-					{
-						price: { $gte: minPrice },
-					},
-					{
-						price: { $lte: maxPrice },
-					},
+					...(minPrice === 0 ? [] : [{ price: { $gte: minPrice } }]),
+					...(maxPrice === 0 ? [] : [{ price: { $lte: maxPrice } }]),
 				],
-				...(attributes.length === 0
+				...(!attributes
 					? {}
 					: {
 							$or: [
@@ -78,6 +76,7 @@ export default async function getListingProductWithFilter({
 			},
 			product_items: {
 				fields: ["id", "price"],
+				sort: [`price:${sort === 1 ? "asc" : "desc"}`],
 			},
 			category: {
 				fields: ["id", "name", "locale"],
@@ -93,6 +92,7 @@ export default async function getListingProductWithFilter({
 			pageSize: pageSize,
 			page: page,
 		},
+		// sort: ["updatedAt:desc"],
 	});
 
 	return fetch(`${URL_API}/api/products?${_query}`, {
@@ -101,9 +101,10 @@ export default async function getListingProductWithFilter({
 		if (res.ok) {
 			return res.json();
 		}
-		console.log(
-			`${res.status} - ${res.json().then((res) => res.error.message)}`,
-		);
+		// console.log(
+		// 	`${res.status} - ${res.json().then((res) => res.error.message)}`,
+		// );
+		// console.log(_query);
 		throw new Error("Failed to fetch data");
 	});
 }

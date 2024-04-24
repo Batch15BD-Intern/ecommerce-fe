@@ -30,12 +30,15 @@ const ProductsPage = async ({ searchParams }: ProductsPageProps) => {
 			<div className="flex gap-5 pt-4">
 				<ProductClientPage />
 				<div className="flex flex-col gap-4 w-full">
-					<ProductFilterStatic />
+					<ProductFilterStatic meta={products.meta.pagination} />
 					{parsedParams?.query && (
 						<div>
 							<span>Kết quả tìm kiếm cho từ khoá `{parsedParams.query}`</span>
 						</div>
 					)}
+					<div>
+						<span>Có {products.meta.pagination.total} kết quả tìm kiếm</span>
+					</div>
 					<ProductItems products={products} />
 				</div>
 			</div>

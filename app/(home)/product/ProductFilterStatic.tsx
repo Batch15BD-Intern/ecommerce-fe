@@ -1,4 +1,8 @@
+"use client";
+
 import MyButton from "@/app/components/Button";
+import { E_InputCounter } from "@/app/enum";
+import type { Pagination } from "@/app/types";
 import {
 	Button,
 	Dropdown,
@@ -6,6 +10,9 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 } from "@nextui-org/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import qs from "qs";
+import { useEffect, useState } from "react";
 import { MdNavigateBefore, MdNavigateNext } from "react-icons/md";
 
 const sort = [
@@ -19,7 +26,59 @@ const sort = [
 	},
 ];
 
-export const ProductFilterStatic = () => {
+export const ProductFilterStatic = ({ meta }: { meta: Pagination }) => {
+	const [value, setValue] = useState(2);
+	const [page, setPage] = useState(1);
+	const params = useSearchParams();
+	const route = useRouter();
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		let current_query = {};
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+
+		current_query = {
+			...current_query,
+			sort: value,
+		};
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	}, [value]);
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		let current_query = {};
+
+		if (params) {
+			current_query = qs.parse(params.toString());
+		}
+
+		current_query = {
+			...current_query,
+			page: page,
+		};
+
+		const url = qs.stringify(current_query, { skipNulls: true });
+		route.push(`/product?${url}`);
+	}, [page]);
+
+	const handleChangePage = (e: E_InputCounter) => {
+		if (e === E_InputCounter.DECREMENT) {
+			if (page > 1) {
+				setPage(page - 1);
+			}
+		}
+		if (e === E_InputCounter.INCREMENT) {
+			if (page < meta.pageCount) {
+				setPage(page + 1);
+			}
+		}
+	};
+
 	return (
 		<div
 			className="flex items-center 
@@ -36,16 +95,30 @@ export const ProductFilterStatic = () => {
 						<Button className="bg-[#fdfdfd]">Sắp Xếp Theo</Button>
 					</DropdownTrigger>
 					<DropdownMenu aria-label="Static Actions">
-						<DropdownItem key={sort[0].id}>{sort[0].name}</DropdownItem>
-						<DropdownItem key={sort[1].id}>{sort[1].name}</DropdownItem>
+						<DropdownItem key={sort[0].id} onClick={() => setValue(sort[0].id)}>
+							{sort[0].name}
+						</DropdownItem>
+						<DropdownItem key={sort[1].id} onClick={() => setValue(sort[1].id)}>
+							{sort[1].name}
+						</DropdownItem>
 					</DropdownMenu>
 				</Dropdown>
 			</div>
 			<div className="flex gap-2 items-center">
-				<span>1/2</span>
+				<span>
+					{meta.page}/{meta.pageCount}
+				</span>
 				<div>
-					<MyButton isIconOnly icon={<MdNavigateBefore />}></MyButton>
-					<MyButton isIconOnly icon={<MdNavigateNext />}></MyButton>
+					<MyButton
+						onClick={() => handleChangePage(E_InputCounter.DECREMENT)}
+						isIconOnly
+						icon={<MdNavigateBefore />}
+					/>
+					<MyButton
+						onClick={() => handleChangePage(E_InputCounter.INCREMENT)}
+						isIconOnly
+						icon={<MdNavigateNext />}
+					/>
 				</div>
 			</div>
 		</div>

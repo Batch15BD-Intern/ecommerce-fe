@@ -35,12 +35,12 @@ export type User = {
 
 export type ResponseListingProduct = {
 	data: Product[];
-	meta: Meta;
+	meta: { pagination: Pagination };
 };
 
 export type ResponseProductDetails = {
 	data: ProductDetails;
-	meta: Meta;
+	meta: { pagination: Pagination };
 };
 
 export type ProductDetails = {
@@ -146,10 +146,6 @@ export type ImageFormats = {
 	height: number;
 };
 
-export type Meta = {
-	pagination: Pagination;
-};
-
 export type Pagination = {
 	page: number;
 	pageSize: number;
@@ -170,4 +166,5 @@ export type SearchParams = {
 	categories?: number[];
 	stars?: number;
 	attribute?: string;
+	sort?: number;
 };

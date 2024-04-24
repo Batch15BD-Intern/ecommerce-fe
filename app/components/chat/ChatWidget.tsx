@@ -17,7 +17,6 @@ let socket: any;
 const HelpWidget = () => {
 	const { user } = useAuth();
 	const [isOpen, setIsOpen] = React.useState(false);
-	const [reply, setReply] = React.useState(0);
 	const [text, setText] = React.useState("");
 	const [messages, setMessages] = React.useState<TMessage[]>([]);
 	let welcome: { username: any; message: any };
@@ -31,10 +30,6 @@ const HelpWidget = () => {
 	};
 
 	const handleSendMessage = (e: any) => {
-		// e.preventDefault();
-		// setMessages([...messages, { message: text, sender: "client" }]);
-		// setReply(reply + 1);
-		// setText("");
 		e.preventDefault();
 
 		socket.emit("sendMessage", {
