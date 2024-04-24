@@ -13,7 +13,7 @@ import { CgShoppingCart, CgTrash } from "react-icons/cg";
 import { getCartsJwt } from "../../actions/api_carts/getCarts";
 import { useAuth } from "../../hooks/useAuth";
 import type { ResponseCart } from "../../types";
-import Counter from "./CounterInCart";
+import Counter from "./CounterinCart";
 
 export default function IconCart() {
 	const { jwt } = useAuth();

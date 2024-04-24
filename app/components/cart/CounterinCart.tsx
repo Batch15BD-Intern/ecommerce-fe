@@ -74,6 +74,7 @@ export default function Counter({
 					className="block h-7 w-full border border-gray-300
 					bg-gray-50 py-2.5 text-center"
 					placeholder="1"
+					disabled
 					value={quantity}
 					onChange={handleChange}
 					required

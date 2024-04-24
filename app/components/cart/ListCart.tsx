@@ -1,12 +1,13 @@
-import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
-import { getDiscount } from "@/app/actions/api_carts/getDiscount";
 import { Button, Input, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
+// biome-ignore lint/style/useImportType: <explanation>
+import React from "react";
 import { CgTrash } from "react-icons/cg";
 import { getCartsJwt } from "../../actions/api_carts/getCarts";
+import { getDiscount } from "../../actions/api_carts/getDiscount";
 import { useAuth } from "../../hooks/useAuth";
 import type { ResponseCart, ResponseDiscount } from "../../types";
-import Counter from "./CounterInCart";
+import Counter from "./CounterinCart";
 
 export default function ListCart() {
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
@@ -308,4 +309,7 @@ export default function ListCart() {
 			</div>
 		</div>
 	);
+}
+function deleteCart(id: number, jwt: string) {
+	throw new Error("Function not implemented.");
 }

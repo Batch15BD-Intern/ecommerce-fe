@@ -1,6 +1,7 @@
 "use client";
 
-import ListCart from "@/app/components/cart/ListCart";
+import React from "react";
+import ListCart from "../../components/cart/ListCart";
 
 const CartPage = () => {
 	return (
