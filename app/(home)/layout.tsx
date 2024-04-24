@@ -21,10 +21,12 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={`${roboto.className} bg-gray-100`}>
-				<Navbar
-					facebook={"https://www.facebook.com/hoang3409"}
-					instagram={"https://www.instagram.com/?hl=en"}
-				/>
+				<Suspense fallback={<Loader />}>
+					<Navbar
+						facebook={"https://www.facebook.com/hoang3409"}
+						instagram={"https://www.instagram.com/?hl=en"}
+					/>
+				</Suspense>
 				<ChatWidget />
 				<Suspense fallback={<Loader />}>
 					<div className="m-auto max-w-[1200px]">{children}</div>
