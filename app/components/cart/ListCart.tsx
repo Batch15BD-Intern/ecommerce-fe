@@ -1,7 +1,6 @@
 import { Button, Input, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
-// biome-ignore lint/style/useImportType: <explanation>
-import React from "react";
+import type React from "react";
 import { CgTrash } from "react-icons/cg";
 import { getCartsJwt } from "../../actions/api_carts/getCarts";
 import { getDiscount } from "../../actions/api_carts/getDiscount";
@@ -60,7 +59,7 @@ export default function ListCart() {
 					setSelectedDiscountId(selectedDiscount.id);
 				} else {
 					alert("Mã giảm giá không tồn tại!");
-					window.location.reload();
+					// window.location.reload();
 				}
 			} else {
 				alert("Mã giảm giá không tồn tại!");
@@ -70,6 +69,7 @@ export default function ListCart() {
 
 	useEffect(() => {
 		if (!carts) return;
+
 		const initialQuantity = carts.data.length > 0 ? carts.data[0].quantity : 1;
 		setQuantity(initialQuantity);
 	}, [carts]);
@@ -251,8 +251,7 @@ export default function ListCart() {
 								{discount?.data
 									.filter((item) => item.id === selectedDiscountId)
 									.map((item) => (
-										// biome-ignore lint/correctness/useJsxKeyInIterable: <explanation>
-										<>
+										<div key={item.id}>
 											<div
 												className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas"
 												key={item.id}
@@ -265,6 +264,7 @@ export default function ListCart() {
 												{item.attributes.type === "percentage"
 													? `- ${(
 															item.attributes.discount_amount *
+															0.01 *
 															calculateTotalPrice()
 														).toLocaleString()} đ`
 													: `- ${item.attributes.discount_amount.toLocaleString()} đ`}
@@ -278,6 +278,7 @@ export default function ListCart() {
 																(discount?.data.find(
 																	(item) => item.id === selectedDiscountId,
 																)?.attributes.discount_amount || 0) *
+																	0.01 *
 																	calculateTotalPrice()
 															).toLocaleString()}đ`
 														: ` ${(
@@ -288,7 +289,7 @@ export default function ListCart() {
 															).toLocaleString()}đ`}
 												</p>
 											</div>
-										</>
+										</div>
 									))}
 
 								<Button
