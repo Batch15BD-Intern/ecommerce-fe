@@ -3,13 +3,14 @@ import { getCartsJwt } from "@/app/actions/getCarts";
 import { useAuth } from "@/app/hooks/useAuth";
 import type { ResponseCart } from "@/app/types";
 import { useEffect, useState } from "react";
-import CheckOutForm from "./CheckoutForm";
 import CartItem from "./CartItems";
+import CheckOutForm from "./CheckoutForm";
 
 export default function CheckoutPage() {
 	const [carts, setCarts] = useState<ResponseCart | undefined>();
 	const { jwt } = useAuth();
 	useEffect(() => {
+		if (!jwt) return;
 		getCartsJwt(jwt)?.then((res) => {
 			setCarts(res);
 		});

@@ -12,12 +12,14 @@ export default function OrderPage() {
 	const [postError, setError] = useState(false);
 	const { jwt } = useAuth();
 	useEffect(() => {
+		if (!jwt) return;
 		getOrders(jwt)?.then((res) => {
 			setOrders(res);
 		});
 	}, [jwt]);
 
 	const handleCancel = async (id: number) => {
+		if (!jwt) return;
 		try {
 			const response = await updateOrder(id, jwt, "canceled");
 			setPostSuccess(true);

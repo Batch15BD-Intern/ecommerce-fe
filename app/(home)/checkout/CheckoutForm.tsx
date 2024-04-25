@@ -36,6 +36,7 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 
 	const handlePostCheckOut = async () => {
 		try {
+			if (!jwt) return;
 			if (carts?.data && carts.data.length > 0) {
 				const orderLineData = carts?.data.map((item) => ({
 					quantity: item.quantity,
@@ -54,6 +55,7 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 	};
 
 	const handlePostAddress = async () => {
+		if (!jwt) return;
 		try {
 			await PostUserAddress(
 				jwt,

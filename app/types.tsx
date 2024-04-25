@@ -24,7 +24,7 @@ export type ResponseCart = {
 			product_item: ProductItemsCart;
 		},
 	];
-  error: {
+	error: {
 		status: number;
 		name: string;
 		message: string;
@@ -50,7 +50,7 @@ export type Order_line = {
 	quantity: number;
 	product_item: ProductItemsCart;
 };
-	
+
 export type ResponseDiscount = {
 	data: [
 		{
@@ -131,20 +131,6 @@ export type ProductItems = {
 		image: { data: Image[] };
 		product_config: { data: ProductConfig[] };
 	};
-};
-export type ProductItemsCart = {
-	id: number;
-	price: number;
-	name: string;
-	image: [
-		{
-			formats: {
-				small: ImageFormats;
-				medium: ImageFormats;
-				thumbnail: ImageFormats;
-			};
-		},
-	];
 };
 
 export type ProductConfig = {
