@@ -5,7 +5,7 @@ import type React from "react";
 import type { ReactNode } from "react";
 
 interface ButtonProps {
-	label: string;
+	label?: string;
 	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 	disabled?: boolean;
 	outline?: boolean;
@@ -30,6 +30,7 @@ const MyButton: React.FC<ButtonProps> = ({
 	return (
 		<Button
 			type={type}
+			aria-label={label}
 			disabled={disabled}
 			size={size}
 			isIconOnly={isIconOnly}

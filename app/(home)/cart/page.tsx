@@ -1,16 +1,14 @@
 "use client";
 
-import { getCarts } from "@/app/actions/getCarts";
-import { useEffect } from "react";
+import React from "react";
+import ListCart from "../../components/cart/ListCart";
 
 const CartPage = () => {
-	const carts = getCarts();
-	
-	useEffect(() => {
-		console.log(carts);
-	});
-
-	return <div></div>;
+	return (
+		<div>
+			<ListCart />
+		</div>
+	);
 };
 
 export default CartPage;

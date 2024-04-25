@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import React, { type ReactNode } from "react";
 import Footer from "../components/Footer";
@@ -19,11 +20,10 @@ export default function RootLayout({
 		<html lang="en">
 			<body className={`${roboto.className} bg-gray-100`}>
 				<SecondNavbar />
-				<div className="bg-[#ee4d2d]">
-					<div className="max-w-[1200px] m-auto">{children}</div>
-				</div>
+				<div>{children}</div>
 				<Footer />
 			</body>
+			<GoogleAnalytics gaId="G-8WH5RY3SRX" />
 		</html>
 	);
 }
