@@ -1,15 +1,19 @@
 "use client";
-import { useAuth } from "../hooks/useAuth";
-import { type ResponseCart, URL_API } from "../types";
 
-export function getCartsJwt(jwt: string): Promise<ResponseCart> | undefined {
+import { URL_API } from "../types";
+export function updateOrder(id: number, jwt: string, status: string) {
 	if (jwt === undefined) return;
 
-	return fetch(`${URL_API}/api/carts?`, {
-		cache: "no-cache",
+	return fetch(`${URL_API}/api/orders/${id}`, {
+		method: "PUT",
+		cache: "reload",
 		headers: {
+			"Content-Type": "application/json",
 			Authorization: `Bearer ${jwt}`,
 		},
+		body: JSON.stringify({
+			data: { id, status },
+		}),
 	}).then((res) => {
 		if (res.ok) {
 			return res.json();

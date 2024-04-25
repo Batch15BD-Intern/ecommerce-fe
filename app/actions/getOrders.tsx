@@ -1,11 +1,10 @@
 "use client";
-import { useAuth } from "../hooks/useAuth";
-import { type ResponseCart, URL_API } from "../types";
+import { type ResponseOrder, URL_API } from "../types";
 
-export function getCartsJwt(jwt: string): Promise<ResponseCart> | undefined {
+export function getOrders(jwt: string): Promise<ResponseOrder> | undefined {
 	if (jwt === undefined) return;
 
-	return fetch(`${URL_API}/api/carts?`, {
+	return fetch(`${URL_API}/api/orders?`, {
 		cache: "no-cache",
 		headers: {
 			Authorization: `Bearer ${jwt}`,

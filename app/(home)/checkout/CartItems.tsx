@@ -14,7 +14,10 @@ export default function CartItem({ carts }: CartItemProps) {
 				</h2>
 				<div className="space-y-6 mt-10">
 					{carts?.data.map((item) => (
-						<div className="grid sm:grid-cols-2 items-start gap-6">
+						<div
+							className="grid sm:grid-cols-2 items-start gap-6"
+							key={item.id}
+						>
 							<div className="max-w-[190px] px-4 py-6 shrink-0 bg-gray-200 rounded-md">
 								<Image
 									width={50}

@@ -1,20 +1,26 @@
 "use client";
 
 import { URL_API } from "../types";
-export function PostCheckOut(
+
+export function PostUserAddress(
 	jwt: string,
-	orderData: { quantity: number; product_item: number; price: number }[],
+	address_line_1: string,
+	city: string,
+	country: string,
+	phone: number,
+	postal_code: number,
 ) {
 	if (jwt === undefined) return;
 
-	return fetch(`${URL_API}/api/orders?`, {
+	return fetch(`${URL_API}/api/user-addresses`, {
 		method: "POST",
+		cache: "reload",
 		headers: {
 			"Content-Type": "application/json",
 			Authorization: `Bearer ${jwt}`,
 		},
 		body: JSON.stringify({
-			data: orderData,
+			data: { address_line_1, city, country, phone, postal_code },
 		}),
 	}).then((res) => {
 		if (res.ok) {

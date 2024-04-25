@@ -48,7 +48,7 @@ export default function Failure({ handleMessage }: failureProp) {
 							<span className="sr-only">Failure</span>
 						</div>
 						<p className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-							Checkout Failure.
+							Failure.
 						</p>
 						<button
 							data-modal-toggle="successModal"
@@ -56,7 +56,7 @@ export default function Failure({ handleMessage }: failureProp) {
 							className="py-2 px-3 text-sm font-medium text-center text-white rounded-lg bg-red-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 dark:focus:ring-primary-900"
 							onClick={handleMessage}
 						>
-							Continue
+							Close
 						</button>
 					</div>
 				</div>

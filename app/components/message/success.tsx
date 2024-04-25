@@ -1,13 +1,14 @@
 import React from "react";
 interface successProp {
+	message: string;
 	handleMessage: () => void;
 }
-export default function Success({ handleMessage }: successProp) {
+export default function Success({ message, handleMessage }: successProp) {
 	return (
 		<>
 			<div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50">
 				<div className="relative p-4 w-full max-w-md h-full md:h-auto">
-					<div className="absolute p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+					<div className="relative p-4 text-center bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
 						<button
 							type="button"
 							className="text-gray-400 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -45,7 +46,7 @@ export default function Success({ handleMessage }: successProp) {
 							<span className="sr-only">Success</span>
 						</div>
 						<p className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-							Checkout successfully.
+							{message} Successfully.
 						</p>
 						<button
 							data-modal-toggle="successModal"
