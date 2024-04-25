@@ -24,13 +24,33 @@ export type ResponseCart = {
 			product_item: ProductItemsCart;
 		},
 	];
-	error: {
+  error: {
 		status: number;
 		name: string;
 		message: string;
 		details: {};
 	};
 };
+
+export type ResponseOrder = {
+	data: [
+		{
+			id: number;
+			total: number;
+			status: string;
+			createdAt: string;
+			order_lines: [Order_line];
+		},
+	];
+};
+
+export type Order_line = {
+	id: number;
+	price: number;
+	quantity: number;
+	product_item: ProductItemsCart;
+};
+	
 export type ResponseDiscount = {
 	data: [
 		{
@@ -86,6 +106,20 @@ export type ProductDetails = {
 			data: ProductItems[];
 		};
 	};
+};
+export type ProductItemsCart = {
+	id: number;
+	price: number;
+	name: string;
+	image: [
+		{
+			formats: {
+				small: ImageFormats;
+				medium: ImageFormats;
+				thumbnail: ImageFormats;
+			};
+		},
+	];
 };
 
 export type ProductItems = {
