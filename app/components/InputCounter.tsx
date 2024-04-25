@@ -13,12 +13,6 @@ export default function InputCounter({
 	setQuantity,
 	className,
 }: InputCounterProps) {
-	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = Number.parseInt(e.target.value);
-		// if (!Number.isNaN(value)) {
-		// 	onQuantityChange(value);
-		// }
-	};
 	return (
 		<div className={className}>
 			<label
@@ -66,8 +60,8 @@ export default function InputCounter({
 					dark:focus:border-blue-500 dark:focus:ring-blue-500"
 					placeholder="1"
 					value={quantity}
-					onChange={handleChange}
 					required
+					disabled
 				/>
 				<button
 					type="button"
