@@ -7,6 +7,7 @@ import { getDiscount } from "../../actions/api_carts/getDiscount";
 import { useAuth } from "../../hooks/useAuth";
 import type { ResponseCart, ResponseDiscount } from "../../types";
 import Counter from "./CounterinCart";
+import {deleteCart} from "@/app/actions/api_carts/deleteCart";
 
 export default function ListCart() {
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
@@ -310,7 +311,4 @@ export default function ListCart() {
 			</div>
 		</div>
 	);
-}
-function deleteCart(id: number, jwt: string) {
-	throw new Error("Function not implemented.");
 }
