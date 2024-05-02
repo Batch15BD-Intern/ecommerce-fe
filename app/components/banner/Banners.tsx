@@ -14,7 +14,6 @@ export default function Banners() {
 
 	useEffect(() => {
 		getBanners().then((res) => {
-			console.log(res);
 			setBanners(res.data.attributes.BannerItem);
 			setLoading(false);
 		});
