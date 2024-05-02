@@ -7,7 +7,7 @@ import { roboto } from "../fonts";
 import "../globals.css";
 
 export const metadata: Metadata = {
-	title: "Login to your account",
+	title: "Authentication",
 	description: "",
 };
 

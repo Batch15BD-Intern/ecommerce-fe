@@ -1,15 +1,15 @@
 "use client";
 
 import getAutocomplete from "@/app/actions/getAutocomplete";
-import type { Product } from "@/app/types";
-import { Button } from "@nextui-org/react";
+import type {Product} from "@/app/types";
+import {Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger} from "@nextui-org/react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import qs from "qs";
-import { useEffect, useRef, useState } from "react";
-import { CiSearch } from "react-icons/ci";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
-import { useAuth } from "../../hooks/useAuth";
+import {useEffect, useRef, useState} from "react";
+import {CiSearch} from "react-icons/ci";
+import {FaFacebook, FaInstagram} from "react-icons/fa";
+import {useAuth} from "../../hooks/useAuth";
 import Logo from "../Logo";
 import IconCart from "../cart/IconCart";
 
@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function Navbar({ facebook, instagram }: NavbarProps) {
-	const { user, jwt } = useAuth();
+	const { user, logout } = useAuth();
 	const [isClient, setIsClient] = useState(false);
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
 	const params = useSearchParams();
@@ -91,6 +91,10 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 		handle(product.attributes.name);
 	};
 
+	const handleLogout = () => {
+		logout()
+	}
+
 	useEffect(() => {
 		setIsClient(true);
 	}, []);
@@ -119,7 +123,17 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					<div>Ngôn ngữ</div>
 					<div>
 						{isClient && user ? (
-							<div onClick={goToProfile}>{user.username}</div>
+							<div onClick={goToProfile}>
+								<Dropdown>
+									<DropdownTrigger>
+										<div>{user.username}</div>
+									</DropdownTrigger>
+									<DropdownMenu>
+										<DropdownItem key={"profile"} href={'/profile'}>Profile</DropdownItem>
+										<DropdownItem key={"logout"} onClick={handleLogout}>Logout</DropdownItem>
+									</DropdownMenu>
+								</Dropdown>
+							</div>
 						) : (
 							<div className="flex gap-2">
 								<Link href={"/auth"}>Đăng ký</Link>
