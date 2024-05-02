@@ -1,10 +1,11 @@
 import type {User} from "@/app/types";
 import Loader from "@/app/components/Loader";
-import {Suspense} from "react";
+import React, {Suspense} from "react";
 
 export default function Profile({ user }: { user?: User }) {
 	return (
 		<Suspense fallback={<Loader />}>
+			{!user && (<Loader/>)}
 			{user && (
 				<>
 					<div className="px-4 py-5 sm:px-6">
