@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import {useEffect, useState} from "react";
-import {Swiper, SwiperSlide} from "swiper/react";
-import Loader from "../Loader";
-import Link from "next/link";
-import "swiper/css";
 import getBanners from "@/app/actions/getBanners";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import "swiper/css";
+import { Swiper, SwiperSlide } from "swiper/react";
+import Loader from "../Loader";
 
 export default function Banners() {
 	const [isLoading, setLoading] = useState(true);
