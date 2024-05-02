@@ -1,21 +1,23 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
+import {useEffect, useState} from "react";
+import {Swiper, SwiperSlide} from "swiper/react";
 import Loader from "../Loader";
-
 import Link from "next/link";
-// Import Swiper styles
 import "swiper/css";
+import getBanners from "@/app/actions/getBanners";
 
 export default function Banners() {
 	const [isLoading, setLoading] = useState(true);
 	const [banners, setBanners] = useState<any[]>([]);
 
 	useEffect(() => {
-		setLoading(false);
+		getBanners().then((res) => {
+			console.log(res);
+			setBanners(res.data.attributes.BannerItem);
+			setLoading(false);
+		});
 	}, []);
 
 	return (
@@ -33,19 +35,19 @@ export default function Banners() {
 					onSlideChange={() => console.log("slide change")}
 					onSwiper={(swiper) => console.log(swiper)}
 				>
-					<SwiperSlide>
-						{banners.map((banner) => (
-							<Link key={banner.id} href={banner.link}>
+					{banners.map((banner) => (
+						<SwiperSlide key={banner.id}>
+							<Link href={banner.link}>
 								<Image
 									className="rounded-lg"
 									src={banner.image.data.attributes.url}
-									alt={""}
+									alt={banner.title}
 									width={720}
 									height={220}
 								/>
 							</Link>
-						))}
-					</SwiperSlide>
+						</SwiperSlide>
+					))}
 				</Swiper>
 			)}
 		</div>

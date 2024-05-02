@@ -1,7 +1,7 @@
 import getListingProduct from "@/app/actions/getListingProduct";
 import ProductCard from "@/app/components/product/ProductCard";
 import React, { Suspense } from "react";
-import Banners from "../components/Banner/Banners";
+import Banners from "@/app/components/banner/Banners";
 import Loader from "../components/Loader";
 
 const Home = async () => {
