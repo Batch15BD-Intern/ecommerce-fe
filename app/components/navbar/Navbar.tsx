@@ -126,7 +126,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 							<div onClick={goToProfile}>
 								<Dropdown>
 									<DropdownTrigger>
-										<div>{user.username}</div>
+										<div className={"cursor-pointer"}>{user.username}</div>
 									</DropdownTrigger>
 									<DropdownMenu>
 										<DropdownItem key={"profile"} href={'/profile'}>Profile</DropdownItem>
