@@ -9,7 +9,6 @@ export default function SecondNavbar() {
 					<div className="top-0 h-[42px] w-[127px]">
 						<Logo fill="#fb5533" />
 					</div>
-					<span className="text-2xl pt-3">Đăng nhập</span>
 				</div>
 				<div className="pt-3 text-sm">
 					<Link href={"/"} className="text-[#fb5533]">

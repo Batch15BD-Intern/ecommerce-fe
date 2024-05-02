@@ -1,31 +1,44 @@
 "use client";
 
 import getAutocomplete from "@/app/actions/getAutocomplete";
-import Logo from "@/app/components/Logo";
-import { useAuth } from "@/app/hooks/useAuth";
 import type { Product } from "@/app/types";
 import { Button } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { useEffect, useRef, useState } from "react";
-import { CgShoppingCart } from "react-icons/cg";
 import { CiSearch } from "react-icons/ci";
 import { FaFacebook, FaInstagram } from "react-icons/fa";
+import { useAuth } from "../../hooks/useAuth";
+import Logo from "../Logo";
+import IconCart from "../cart/IconCart";
 
 type NavbarProps = {
 	facebook: string;
 	instagram: string;
 };
+type Props = {
+	params: {
+		id: string;
+	};
+};
 
 export default function Navbar({ facebook, instagram }: NavbarProps) {
+	const { user, jwt } = useAuth();
 	const [isClient, setIsClient] = useState(false);
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
-	const { user, logout } = useAuth();
 	const params = useSearchParams();
 	const route = useRouter();
 	const [search, setSearch] = useState<string>("");
 	const [autocomplete, setAutocomplete] = useState<Product[]>([]);
+
+	useEffect(() => {
+		setIsClient(true);
+	}, []);
+
+	function goToProfile() {
+		route.push("/profile");
+	}
 
 	const handle = (_query?: string) => {
 		setAutocomplete([]);
@@ -83,8 +96,8 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 	}, []);
 
 	return (
-		<div className="top-0 w-full bg-gradient-to-r from-[#f53d2d] to-[#f63] z-100 flex flex-col items-center">
-			<div className="w-[1200px] flex justify-between text-white text-sm">
+		<div className="top-0 w-full h-[50] bg-gradient-to-r from-[#f53d2d] to-[#f63] z-100 flex flex-col items-center">
+			<div className="2xl:w-[1200px] lg:w-[1000px] sm:w-[500px] md:w-[650px] flex justify-between text-white">
 				<div className="opacity-90 flex gap-2">
 					<span>Kênh Người Bán</span>
 					<span>Tải ứng dụng</span>
@@ -106,7 +119,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					<div>Ngôn ngữ</div>
 					<div>
 						{isClient && user ? (
-							<div onClick={logout}>{user.username}</div>
+							<div onClick={goToProfile}>{user.username}</div>
 						) : (
 							<div className="flex gap-2">
 								<Link href={"/auth"}>Đăng ký</Link>
@@ -117,12 +130,12 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					</div>
 				</div>
 			</div>
-			<div className="w-[1200px] py-[16px] flex justify-around items-center">
-				<div className="h-[65px] w-[192px]">
+			<div className="2xl:w-[1200px] lg:w-[1000px] sm:w-[500px] md:w-[700px] py-[16px] flex justify-around items-center">
+				<div className="h-[60px] w-[160px]">
 					<Logo fill="white" />
 				</div>
-				<div className="w-[840px]">
-					<div className="relative flex bg-white px-[0.625rem] py-[7px]">
+				<div className=" 2xl:w-[850px] lg:w-[600px] sm:w-[250px] md:w-[400px]">
+					<div className="px-[0.625rem] bg-white flex py-[7px]">
 						<input
 							className="w-full outline-none"
 							aria-label="Tìm sản phẩm, thương hiệu, và tên shop"
@@ -158,9 +171,7 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 						</div>
 					)}
 				</div>
-				<div>
-					<CgShoppingCart className="text-3xl text-white" />
-				</div>
+				<IconCart />
 			</div>
 		</div>
 	);
