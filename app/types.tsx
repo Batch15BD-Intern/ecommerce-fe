@@ -1,5 +1,4 @@
 export const URL_API = "https://ecommerce.zeabur.app";
-// export const URL_API = "http://localhost:1337";
 
 export type ResponseAuth = {
 	jwt: string;
@@ -55,12 +54,16 @@ export type ResponseDiscount = {
 	data: [
 		{
 			id: number;
-			attributes: {
-				discount_code: string;
-				discount_amount: number;
-				expiration_date: Date;
-				type: string;
-			};
+			discount_code: string;
+			discount_amount: number;
+			expiration_date: Date;
+			type: string;
+			products: [
+				{
+					id: number;
+					name: string;
+				},
+			];
 		},
 	];
 };
@@ -111,6 +114,9 @@ export type ProductItemsCart = {
 	id: number;
 	price: number;
 	name: string;
+	product: {
+		id: number;
+	};
 	image: [
 		{
 			formats: {
@@ -190,6 +196,14 @@ export type Brand = {
 	id: number;
 	attributes: {
 		name: string;
+	};
+};
+
+export type Discount = {
+	id: number;
+	attributes: {
+		discount_code: string;
+		discount_amount: number;
 	};
 };
 

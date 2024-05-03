@@ -26,21 +26,6 @@ export default function CheckoutPage() {
 						</div>
 						<div className=" bg-gray-100 h-full">
 							<CartItem carts={carts} />
-							<div className=" left-0 bottom-0 bg-gray-200 w-full p-4">
-								<h4 className="flex flex-wrap gap-4 text-base text-[#333] font-bold">
-									Total{" "}
-									<span className="ml-auto">
-										{carts?.data
-											.reduce(
-												(total, item) =>
-													total + item.product_item.price * item.quantity,
-												0,
-											)
-											.toLocaleString()}
-										đ
-									</span>
-								</h4>
-							</div>
 						</div>
 					</div>
 				</div>

@@ -1,8 +1,9 @@
 import React from "react";
 interface failureProp {
+	message: string;
 	handleMessage: () => void;
 }
-export default function Failure({ handleMessage }: failureProp) {
+export default function Failure({ message, handleMessage }: failureProp) {
 	return (
 		<>
 			<div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50">

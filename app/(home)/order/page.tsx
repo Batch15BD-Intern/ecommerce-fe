@@ -39,7 +39,7 @@ export default function OrderPage() {
 			)}
 			{postError && (
 				<>
-					<Failure handleMessage={handleMessage} />
+					<Failure message="Cancel" handleMessage={handleMessage} />
 				</>
 			)}
 			<div className="bg-white">
