@@ -1,11 +1,12 @@
 "use client";
 
-import {getInformation} from "@/app/actions/user/getInformation";
-import {useAuth} from "@/app/hooks/useAuth";
-import type {User} from "@/app/types";
-import {useEffect, useState} from "react";
-import {Card, CardBody, Tab, Tabs} from "@nextui-org/react";
 import Profile from "@/app/(auth)/profile/Profile";
+import OrderPage from "@/app/(home)/order/page";
+import { getInformation } from "@/app/actions/user/getInformation";
+import { useAuth } from "@/app/hooks/useAuth";
+import type { User } from "@/app/types";
+import { Card, CardBody, Tab, Tabs } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
 	const { jwt } = useAuth();
@@ -35,7 +36,7 @@ export default function ProfilePage() {
 					<Tab key="orders" title="Orders">
 						<Card>
 							<CardBody>
-
+								<OrderPage />
 							</CardBody>
 						</Card>
 					</Tab>

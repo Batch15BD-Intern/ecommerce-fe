@@ -1,6 +1,10 @@
 import { FaStar } from "react-icons/fa";
 
-export const StarRating = ({ rating }: { rating: number }) => {
+type StarRatingProps = {
+	rating: number;
+};
+
+export const StarRating = ({ rating }: StarRatingProps) => {
 	const totalStars = 5;
 	return (
 		<div className="flex">
