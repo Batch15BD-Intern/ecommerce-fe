@@ -1,3 +1,4 @@
+import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
 import { Button, Input, Typography } from "@material-tailwind/react";
 import { useEffect, useState } from "react";
 import type React from "react";
@@ -12,7 +13,9 @@ import Link from "next/link";
 import { useVoucher } from "@/app/hooks/useDiscount";
 
 export default function ListCart() {
-	const { saveVoucher } = useVoucher();
+const { saveVoucher } = useVoucher();
+
+export default function ListCart() {
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
 	const [discount, setDiscount] = useState<ResponseDiscount | null>(null);
 	const [quantity, setQuantity] = useState(1);
@@ -105,6 +108,7 @@ export default function ListCart() {
 			}
 		});
 	};
+
 	useEffect(() => {
 		if (!carts) return;
 

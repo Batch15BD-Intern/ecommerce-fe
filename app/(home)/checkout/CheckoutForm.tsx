@@ -202,14 +202,6 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 							onClick={handleConfirmPayment}
 						>
 							Confirm payment{" "}
-							{/* {carts?.data
-								.reduce(
-									(total, item) =>
-										total + item.product_item.price * item.quantity,
-									0,
-								)
-								.toLocaleString()}
-							đ */}
 						</button>
 					</div>
 				</div>

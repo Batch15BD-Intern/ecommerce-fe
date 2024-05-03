@@ -63,9 +63,6 @@ export default function CartItem({ carts }: CartItemProps) {
 									{item.product_item.name}
 								</h3>
 								<ul className="text-xs text-[#333] space-y-2 mt-2">
-									{/* <li className="flex flex-wrap gap-4">
-										Size <span className="ml-auto">2</span>
-									</li> */}
 									<li className="flex flex-wrap gap-4">
 										Quantity <span className="ml-auto">{item.quantity}</span>
 									</li>
@@ -130,16 +127,6 @@ export default function CartItem({ carts }: CartItemProps) {
 											</li>
 										</>
 									)}
-
-									{/* <li className="flex flex-wrap gap-4">
-										Total Price{" "}
-										<span className="ml-auto">
-											{(
-												item.product_item.price * item.quantity
-											).toLocaleString()}
-											đ
-										</span>
-									</li> */}
 								</ul>
 							</div>
 						</div>
