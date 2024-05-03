@@ -13,15 +13,13 @@ import Link from "next/link";
 import { useVoucher } from "@/app/hooks/useDiscount";
 
 export default function ListCart() {
-const { saveVoucher } = useVoucher();
-
-export default function ListCart() {
 	const [carts, setCarts] = useState<ResponseCart | null>(null);
 	const [discount, setDiscount] = useState<ResponseDiscount | null>(null);
 	const [quantity, setQuantity] = useState(1);
 	const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { jwt } = useAuth();
+	const { saveVoucher } = useVoucher();
 	const [voucher, setVoucher] = useState("");
 	const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(
 		null,
