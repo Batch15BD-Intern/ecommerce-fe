@@ -2,8 +2,6 @@
 
 import { URL_API } from "../types";
 export function updateOrder(id: number, jwt: string, status: string) {
-	if (jwt === undefined) return;
-
 	return fetch(`${URL_API}/api/orders/${id}`, {
 		method: "PUT",
 		cache: "reload",
