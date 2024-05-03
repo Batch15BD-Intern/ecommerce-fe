@@ -2,12 +2,15 @@
 
 import React from "react";
 import ListCart from "../../components/cart/ListCart";
+import React, { Suspense, type ReactNode } from "react";
 
 const CartPage = () => {
 	return (
-		<div>
-			<ListCart />
-		</div>
+		<Suspense fallback={<Loader />}>
+			<div>
+				<ListCart />
+			</div>
+		</Suspense>
 	);
 };
 

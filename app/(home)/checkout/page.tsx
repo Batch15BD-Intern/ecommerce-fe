@@ -5,6 +5,7 @@ import type { ResponseCart } from "@/app/types";
 import { useEffect, useState } from "react";
 import CartItem from "./CartItems";
 import CheckOutForm from "./CheckoutForm";
+import React, { Suspense, type ReactNode } from "react";
 
 export default function CheckoutPage() {
 	const [carts, setCarts] = useState<ResponseCart | undefined>();
@@ -17,7 +18,7 @@ export default function CheckoutPage() {
 	}, [jwt]);
 
 	return (
-		<>
+		<Suspense fallback={<Loader />}>
 			<div className="font-[sans-serif] bg-white">
 				<div className="max-lg:max-w-xl mx-auto w-full">
 					<div className="grid lg:grid-cols-3 gap-6">
@@ -30,6 +31,6 @@ export default function CheckoutPage() {
 					</div>
 				</div>
 			</div>
-		</>
+		</Suspense>
 	);
 }
