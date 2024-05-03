@@ -1,6 +1,6 @@
 "use client";
 
-import { getCartsJwt } from "@/app/actions/getCarts";
+import { getCartsJwt } from "@/app/actions/api_carts/getCarts";
 import Loader from "@/app/components/Loader";
 import { useAuth } from "@/app/hooks/useAuth";
 import type { ResponseCart } from "@/app/types";
