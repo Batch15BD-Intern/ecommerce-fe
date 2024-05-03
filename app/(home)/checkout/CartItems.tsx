@@ -1,3 +1,5 @@
+"use client";
+
 import { useVoucher } from "@/app/hooks/useDiscount";
 import type { ResponseCart } from "@/app/types";
 import Image from "next/image";

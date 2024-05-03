@@ -18,8 +18,13 @@ type VoucherStore = {
 	clearVoucher: () => void;
 };
 
+const getVoucher = () => {
+	if (typeof window === "undefined") return undefined;
+	return JSON.parse(localStorage.getItem("voucher") || "null");
+};
+
 export const useVoucher = create<VoucherStore>((set) => ({
-	voucher: JSON.parse(localStorage.getItem("voucher") || "null"),
+	voucher: getVoucher(),
 	saveVoucher: (
 		id: number,
 		voucherCode: string,

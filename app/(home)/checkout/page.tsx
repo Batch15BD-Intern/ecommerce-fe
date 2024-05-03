@@ -1,11 +1,13 @@
 "use client";
+
 import { getCartsJwt } from "@/app/actions/getCarts";
+import Loader from "@/app/components/Loader";
 import { useAuth } from "@/app/hooks/useAuth";
 import type { ResponseCart } from "@/app/types";
 import { useEffect, useState } from "react";
+import React, { Suspense } from "react";
 import CartItem from "./CartItems";
 import CheckOutForm from "./CheckoutForm";
-import React, { Suspense, type ReactNode } from "react";
 
 export default function CheckoutPage() {
 	const [carts, setCarts] = useState<ResponseCart | undefined>();

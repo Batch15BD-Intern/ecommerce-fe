@@ -1,3 +1,5 @@
+"use client";
+
 import { PostCheckOut } from "@/app/actions/PostCheckOut";
 import { PostUserAddress } from "@/app/actions/PostUserAddress";
 import Failure from "@/app/components/message/failure";
