@@ -37,7 +37,13 @@ export default async function ProductDetailPage({ params }: Props) {
 					</div>
 				</div>
 			</div>
-			<div className={"mt-[1.265rem] bg-white p-[1.265rem]"}>Đánh giá</div>
+			<div className="mt-[1.265rem] flex flex-col bg-white p-[1.265rem]">
+				<div>
+					<h2 className="text-2xl">Đánh giá</h2>
+					<span>Rate: </span>
+				</div>
+				<div></div>
+			</div>
 		</div>
 	);
 }

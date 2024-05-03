@@ -1,5 +1,9 @@
+"use client";
+
 import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
+import { useVoucher } from "@/app/hooks/useDiscount";
 import { Button, Input, Typography } from "@material-tailwind/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type React from "react";
 import { CgTrash } from "react-icons/cg";
@@ -8,8 +12,6 @@ import { getDiscount } from "../../actions/api_carts/getDiscount";
 import { useAuth } from "../../hooks/useAuth";
 import type { ResponseCart, ResponseDiscount } from "../../types";
 import Counter from "./CounterinCart";
-import Link from "next/link";
-import { useVoucher } from "@/app/hooks/useDiscount";
 
 export default function ListCart() {
 	const [carts, setCarts] = useState<ResponseCart | null>(null);

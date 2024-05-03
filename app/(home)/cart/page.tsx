@@ -1,8 +1,6 @@
-"use client";
-
-import React from "react";
+import Loader from "@/app/components/Loader";
+import React, { Suspense } from "react";
 import ListCart from "../../components/cart/ListCart";
-import React, { Suspense, type ReactNode } from "react";
 
 const CartPage = () => {
 	return (
