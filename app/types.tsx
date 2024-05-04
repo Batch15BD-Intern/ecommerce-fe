@@ -39,6 +39,16 @@ export type ResponseOrder = {
 			status: string;
 			createdAt: string;
 			order_lines: [Order_line];
+			discount_code: {
+				id: number;
+				discount_amount: number;
+				type: string;
+				products: [
+					{
+						id: number;
+					},
+				];
+			};
 		},
 	];
 };
