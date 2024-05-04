@@ -1,7 +1,7 @@
 import { URL_API } from "@/app/types";
 import qs from "qs";
 
-export default async function getReviews({ idProduct }: any) {
+export default async function getReviews(idProduct: number) {
 	const _query = qs.stringify({
 		filters: {
 			order_line: {
