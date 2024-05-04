@@ -1,5 +1,3 @@
-"use client";
-
 import { PostCheckOut } from "@/app/actions/PostCheckOut";
 import { PostUserAddress } from "@/app/actions/PostUserAddress";
 import Failure from "@/app/components/message/failure";
@@ -53,7 +51,6 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 				await PostCheckOut(jwt, orderLineData);
 				setShowBill(false);
 				setPostSuccess(true);
-				clearVoucher();
 			} else if (carts?.data && carts.data.length > 0 && !voucher) {
 				const orderLineData = carts?.data.map((item) => ({
 					quantity: item.quantity,
@@ -123,6 +120,12 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 						: item.product_item.price - voucher.amount;
 			}
 			return total + price * item.quantity;
+		}, 0);
+	};
+	const calculateTotal = () => {
+		if (!carts?.data) return 0;
+		return carts.data.reduce((total, item) => {
+			return total + item.product_item.price * item.quantity;
 		}, 0);
 	};
 	return (
@@ -311,7 +314,10 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 									<tr>
 										<td className="text-left font-bold text-gray-700">Total</td>
 										<td className="text-right font-bold text-gray-700">
-											{calculateTotalPrice().toLocaleString()}đ đ
+											{voucher
+												? calculateTotalPrice().toLocaleString()
+												: calculateTotal().toLocaleString()}
+											đ
 										</td>
 									</tr>
 								</tfoot>
