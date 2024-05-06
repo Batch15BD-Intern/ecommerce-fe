@@ -1,15 +1,20 @@
 "use client";
+
 import { getOrders } from "@/app/actions/getOrders";
 import { updateOrder } from "@/app/actions/updateOrder";
+import MyButton from "@/app/components/Button";
 import Failure from "@/app/components/message/failure";
 import Success from "@/app/components/message/success";
 import { useAuth } from "@/app/hooks/useAuth";
 import type { ResponseOrder } from "@/app/types";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
 export default function OrderPage() {
 	const [order, setOrders] = useState<ResponseOrder | undefined>();
 	const [postSuccess, setPostSuccess] = useState(false);
 	const [postError, setError] = useState(false);
+	const router = useRouter();
 	const { jwt } = useAuth();
 	useEffect(() => {
 		if (!jwt) return;
@@ -21,8 +26,9 @@ export default function OrderPage() {
 	const handleCancel = async (id: number) => {
 		if (!jwt) return;
 		try {
-			const response = await updateOrder(id, jwt, "canceled");
-			setPostSuccess(true);
+			updateOrder(id, jwt, "canceled").then((_) => {
+				setPostSuccess(true);
+			});
 		} catch (error) {
 			setError(true);
 		}
@@ -39,7 +45,7 @@ export default function OrderPage() {
 			)}
 			{postError && (
 				<>
-					<Failure handleMessage={handleMessage} />
+					<Failure message="Cancel" handleMessage={handleMessage} />
 				</>
 			)}
 			<div className="bg-white">
@@ -87,10 +93,7 @@ export default function OrderPage() {
 											</div>
 										</dl>
 										<div className="flex">
-											<button className="mt-6 flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-[#f58255] shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto p-2">
-												View Bill
-												<span className="sr-only">for order WU88191111</span>
-											</button>
+											
 											{item.status !== "canceled" && (
 												<button
 													onClick={() => handleCancel(item.id)}
@@ -124,12 +127,6 @@ export default function OrderPage() {
 												>
 													Quantity
 												</th>
-												{/* <th
-													scope="col"
-													className="hidden py-3 pr-8 font-normal sm:table-cell"
-												>
-													Status
-												</th> */}
 
 												<th
 													scope="col"
@@ -168,30 +165,42 @@ export default function OrderPage() {
 													</td>
 
 													<td className="hidden py-6 pr-8 sm:table-cell">
-														{items.price.toLocaleString()}đ
+														{/* biome-ignore lint/complexity/useOptionalChain: <explanation> */}
+														{item.discount_code &&
+														item.discount_code.products.some(
+															(product) =>
+																product.id === items.product_item.product.id,
+														)
+															? // Tính giá đã giảm giá
+																`${(
+																	items.price *
+																	(1 - item.discount_code.discount_amount)
+																).toLocaleString()}đ`
+															: // Nếu không có giảm giá, hiển thị giá gốc
+																`${items.price.toLocaleString()}đ`}
 													</td>
 
 													<td className="hidden py-6 pr-8 sm:table-cell">
 														{items.quantity}
 													</td>
-
-													{/* <td className="hidden py-6 pr-8 sm:table-cell">
-														{item.status}
-													</td> */}
-
+													<td className="whitespace-nowrap py-6 text-right font-medium">
+														<MyButton
+															label="Review"
+															onClick={() => {
+																router.push(`/order/review/${items.id}`);
+															}}
+														/>
+													</td>
 													<td className="whitespace-nowrap py-6 text-right font-medium">
 														<button className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded">
 															<a
-																href={`/product/${items.product_item.id}`}
+																href={`/product/${items.product_item.product.id}`}
 																className="text-[#f58255]"
 															>
 																View
 																<span className="hidden lg:inline">
 																	{" "}
 																	Product
-																</span>
-																<span className="sr-only">
-																	, Men's 3D Glasses Artwork Tee
 																</span>
 															</a>
 														</button>

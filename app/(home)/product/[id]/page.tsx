@@ -1,5 +1,8 @@
 import getProductDetails from "@/app/actions/getProductDetails";
+import Loader from "@/app/components/Loader";
+import { Suspense } from "react";
 import ProductDetailsClient from "./ProductDetailsClient";
+import ProductReview from "./ProductReview";
 
 type Props = {
 	params: {
@@ -36,6 +39,11 @@ export default async function ProductDetailPage({ params }: Props) {
 						</table>
 					</div>
 				</div>
+			</div>
+			<div className="mt-[1.265rem] flex flex-col bg-white p-[1.265rem]">
+				<Suspense fallback={<Loader />}>
+					<ProductReview idProduct={product.data.id} />
+				</Suspense>
 			</div>
 		</div>
 	);

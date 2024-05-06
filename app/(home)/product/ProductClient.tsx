@@ -270,7 +270,7 @@ export const ProductClientPage = () => {
 								value={rating.toString()}
 								onChange={() => setRating(rating)}
 							>
-								<StarRating rating={rating} />
+								<StarRating rating={rating} setRating={() => {}} />
 							</Radio>
 						))}
 					</RadioGroup>

@@ -1,13 +1,14 @@
-"use client";
-
-import React from "react";
+import Loader from "@/app/components/Loader";
+import React, { Suspense } from "react";
 import ListCart from "../../components/cart/ListCart";
 
 const CartPage = () => {
 	return (
-		<div>
-			<ListCart />
-		</div>
+		<Suspense fallback={<Loader />}>
+			<div>
+				<ListCart />
+			</div>
+		</Suspense>
 	);
 };
 

@@ -2,7 +2,13 @@
 
 import getAutocomplete from "@/app/actions/getAutocomplete";
 import type { Product } from "@/app/types";
-import { Button } from "@nextui-org/react";
+import {
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+} from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
@@ -24,7 +30,7 @@ type Props = {
 };
 
 export default function Navbar({ facebook, instagram }: NavbarProps) {
-	const { user, jwt } = useAuth();
+	const { user, logout } = useAuth();
 	const [isClient, setIsClient] = useState(false);
 	const [isSearchFocused, setIsSearchFocused] = useState(false);
 	const params = useSearchParams();
@@ -91,6 +97,10 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 		handle(product.attributes.name);
 	};
 
+	const handleLogout = () => {
+		logout();
+	};
+
 	useEffect(() => {
 		setIsClient(true);
 	}, []);
@@ -119,7 +129,21 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					<div>Ngôn ngữ</div>
 					<div>
 						{isClient && user ? (
-							<div onClick={goToProfile}>{user.username}</div>
+							<div onClick={goToProfile}>
+								<Dropdown>
+									<DropdownTrigger>
+										<div className={"cursor-pointer"}>{user.username}</div>
+									</DropdownTrigger>
+									<DropdownMenu>
+										<DropdownItem key={"profile"} href={"/profile"}>
+											Profile
+										</DropdownItem>
+										<DropdownItem key={"logout"} onClick={handleLogout}>
+											Logout
+										</DropdownItem>
+									</DropdownMenu>
+								</Dropdown>
+							</div>
 						) : (
 							<div className="flex gap-2">
 								<Link href={"/auth"}>Đăng ký</Link>
@@ -130,7 +154,10 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 					</div>
 				</div>
 			</div>
-			<div className="2xl:w-[1200px] lg:w-[1000px] sm:w-[500px] md:w-[700px] py-[16px] flex justify-around items-center">
+			<div
+				onFocus={() => setIsSearchFocused(true)}
+				className="2xl:w-[1200px] lg:w-[1000px] sm:w-[500px] md:w-[700px] py-[16px] flex justify-around items-center"
+			>
 				<div className="h-[60px] w-[160px]">
 					<Logo fill="white" />
 				</div>
@@ -146,8 +173,6 @@ export default function Navbar({ facebook, instagram }: NavbarProps) {
 							role="combobox"
 							value={search}
 							onChange={(e) => handleAutocomplete(e.target.value)}
-							onFocus={() => setIsSearchFocused(true)}
-							onBlur={() => setIsSearchFocused(false)}
 						/>
 						<Button
 							className="h-[32px] w-10 rounded-none bg-[#fb5533] outline-none"

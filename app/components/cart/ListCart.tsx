@@ -1,5 +1,9 @@
+"use client";
+
 import { deleteCart } from "@/app/actions/api_carts/deleteCarts";
+import { useVoucher } from "@/app/hooks/useDiscount";
 import { Button, Input, Typography } from "@material-tailwind/react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import type React from "react";
 import { CgTrash } from "react-icons/cg";
@@ -16,6 +20,7 @@ export default function ListCart() {
 	const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { jwt } = useAuth();
+	const { saveVoucher } = useVoucher();
 	const [voucher, setVoucher] = useState("");
 	const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(
 		null,
@@ -44,8 +49,10 @@ export default function ListCart() {
 	};
 	const handleDelete = (id: number) => {
 		if (!jwt) return;
-
 		deleteCart(id, jwt);
+		getCartsJwt(jwt)?.then((res) => {
+			setCarts(res);
+		});
 	};
 	const handleAddDiscount = () => {
 		if (!jwt) return;
@@ -53,15 +60,48 @@ export default function ListCart() {
 		getDiscount(jwt)?.then((res) => {
 			if (res?.data) {
 				const selectedDiscount = res.data.find(
-					(item) => item.attributes.discount_code === voucher,
+					(item) => item.discount_code === voucher,
 				);
-				if (selectedDiscount) {
-					setDiscount(res);
-					setSelectedDiscountId(selectedDiscount.id);
-				} else {
+				if (!selectedDiscount) {
 					alert("Mã giảm giá không tồn tại!");
-					// window.location.reload();
+					window.location.reload();
+					return;
 				}
+
+				const expirationDate = new Date(selectedDiscount.expiration_date);
+				const currentDate = new Date();
+
+				if (expirationDate < currentDate) {
+					alert("Mã giảm giá đã hết hạn!");
+					window.location.reload();
+					return;
+				}
+
+				const selectedProductIdsInCart = carts?.data.map(
+					(item) => item.product_item.product.id,
+				);
+				const selectedProductIdsInDiscount = selectedDiscount.products.map(
+					(pro) => pro.id,
+				);
+
+				const isProductInDiscount = selectedProductIdsInCart?.some(
+					(productId) => selectedProductIdsInDiscount.includes(productId),
+				);
+
+				if (!isProductInDiscount) {
+					alert("Mã không thể áp dụng cho loại sản phẩm này!");
+					window.location.reload();
+					return;
+				}
+				saveVoucher(
+					selectedDiscount.id,
+					selectedDiscount.discount_code,
+					selectedDiscount.discount_amount,
+					selectedDiscount.type,
+					selectedDiscount.products.map((item) => item.id),
+				);
+				setDiscount(res);
+				setSelectedDiscountId(selectedDiscount.id);
 			} else {
 				alert("Mã giảm giá không tồn tại!");
 			}
@@ -245,7 +285,7 @@ export default function ListCart() {
 							</div>
 
 							<div className="col-span-4 border border-gray-200 p-4 rounded bg-gray-200 ">
-								<div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
+								<div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercase">
 									<p>Tạm tính</p>
 									<p>{calculateTotalPrice().toLocaleString()} đ</p>
 								</div>
@@ -253,57 +293,81 @@ export default function ListCart() {
 									.filter((item) => item.id === selectedDiscountId)
 									.map((item) => (
 										<div key={item.id}>
-											<div
-												className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas"
-												key={item.id}
-											>
+											<div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercase">
 												<p>Loại giảm giá</p>
-												{item.attributes.type}
+												{item.type}
 											</div>
-											<div className="flex justify-between border-b border-gray-200 mt-1 text-gray-800 font-medium py-3 uppercas">
-												<p>Tiền giảm</p>
-												{item.attributes.type === "percentage"
-													? `- ${(
-															item.attributes.discount_amount *
-															0.01 *
-															calculateTotalPrice()
-														).toLocaleString()} đ`
-													: `- ${item.attributes.discount_amount.toLocaleString()} đ`}
-											</div>
-											<div className="flex justify-between text-gray-800 font-medium py-3 uppercas">
-												<p className="font-semibold">Tổng tiền</p>
-												<p>
-													{item.attributes.type === "percentage"
-														? ` ${(
-																calculateTotalPrice() -
-																(discount?.data.find(
-																	(item) => item.id === selectedDiscountId,
-																)?.attributes.discount_amount || 0) *
-																	0.01 *
-																	calculateTotalPrice()
-															).toLocaleString()}đ`
-														: ` ${(
-																calculateTotalPrice() -
-																(discount?.data.find(
-																	(item) => item.id === selectedDiscountId,
-																)?.attributes.discount_amount || 0)
-															).toLocaleString()}đ`}
-												</p>
-											</div>
+
+											{discount?.data
+												.filter((item) => item.id === selectedDiscountId)
+												.map((item) => {
+													let totalDiscount = 0;
+
+													carts?.data.forEach((cartItem) => {
+														const matchingProduct = item.products.find(
+															(product) =>
+																product.id === cartItem.product_item.product.id,
+														);
+														if (matchingProduct) {
+															// Tính toán và cộng tổng tiền giảm giá nếu sản phẩm được giảm giá
+															totalDiscount +=
+																item.type === "percentage"
+																	? item.discount_amount *
+																		cartItem.product_item.price *
+																		cartItem.quantity
+																	: item.discount_amount;
+														}
+													});
+
+													return (
+														<div key={item.id}>
+															{totalDiscount > 0 && (
+																<div className="flex justify-between mt-1 text-gray-800 font-medium py-3 uppercase">
+																	<p>
+																		{item.type === "percentage"
+																			? "Tổng giảm"
+																			: "Tiền giảm"}
+																	</p>
+																	<p>
+																		-{" "}
+																		{item.type === "percentage"
+																			? totalDiscount.toLocaleString()
+																			: item.discount_amount.toLocaleString()}{" "}
+																		đ
+																	</p>
+																</div>
+															)}
+															<div className="flex justify-between text-gray-800 font-medium py-3 uppercase">
+																<p className="font-semibold">Tổng tiền</p>
+																<p>
+																	{item.type === "percentage"
+																		? ` ${(
+																				calculateTotalPrice() - totalDiscount
+																			).toLocaleString()}đ`
+																		: ` ${(
+																				calculateTotalPrice() -
+																				item.discount_amount
+																			).toLocaleString()}đ`}
+																</p>
+															</div>
+														</div>
+													);
+												})}
 										</div>
 									))}
-
-								<Button
-									size="md"
-									color="red"
-									className="w-full text-black text-xl"
-									variant="filled"
-									placeholder=""
-									onPointerEnterCapture={() => {}}
-									onPointerLeaveCapture={() => {}}
-								>
-									Thanh toán
-								</Button>
+								<Link href={`/checkout`}>
+									<Button
+										size="md"
+										color="red"
+										className="w-full text-black text-xl"
+										variant="filled"
+										placeholder=""
+										onPointerEnterCapture={() => {}}
+										onPointerLeaveCapture={() => {}}
+									>
+										Thanh toán
+									</Button>
+								</Link>
 							</div>
 						</div>
 					</div>

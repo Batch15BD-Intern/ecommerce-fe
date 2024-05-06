@@ -3,6 +3,7 @@ import { PostUserAddress } from "@/app/actions/PostUserAddress";
 import Failure from "@/app/components/message/failure";
 import Success from "@/app/components/message/success";
 import { useAuth } from "@/app/hooks/useAuth";
+import { useVoucher } from "@/app/hooks/useDiscount";
 import type { ResponseCart } from "@/app/types";
 import { useState } from "react";
 interface CartItemProps {
@@ -10,9 +11,10 @@ interface CartItemProps {
 }
 export default function CheckOutForm({ carts }: CartItemProps) {
 	const { jwt } = useAuth();
+	const { voucher, clearVoucher } = useVoucher();
 	const [showBill, setShowBill] = useState(false);
 	const [postSuccess, setPostSuccess] = useState(false);
-	const [postFailure, setFailureSuccess] = useState(false);
+	const [postFailure, setFailure] = useState(false);
 	const [checkoutInfo, setCheckOutInfo] = useState({
 		name: "",
 		address: "",
@@ -37,20 +39,34 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 	const handlePostCheckOut = async () => {
 		try {
 			if (!jwt) return;
-			if (carts?.data && carts.data.length > 0) {
+			if (carts?.data && carts.data.length > 0 && voucher) {
 				const orderLineData = carts?.data.map((item) => ({
 					quantity: item.quantity,
 					product_item: item.product_item.id,
 					price: item.product_item.price,
+					discount_code: voucher.id,
 				}));
 
+				// Sử dụng voucher.id ở đây
+				await PostCheckOut(jwt, orderLineData);
+				setShowBill(false);
+				setPostSuccess(true);
+			} else if (carts?.data && carts.data.length > 0 && !voucher) {
+				const orderLineData = carts?.data.map((item) => ({
+					quantity: item.quantity,
+					product_item: item.product_item.id,
+					price: item.product_item.price,
+					discount_code: 0,
+				}));
+
+				// Sử dụng voucher.id ở đây
 				await PostCheckOut(jwt, orderLineData);
 				setShowBill(false);
 				setPostSuccess(true);
 			}
 		} catch (error) {
 			setShowBill(false);
-			setFailureSuccess(true);
+			setFailure(true);
 		}
 	};
 
@@ -68,8 +84,49 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 		} catch (error) {}
 	};
 	const handleCombinedActions = () => {
-		handlePostAddress();
-		handlePostCheckOut();
+		if (
+			checkoutInfo.name &&
+			checkoutInfo.address &&
+			checkoutInfo.city &&
+			checkoutInfo.country &&
+			checkoutInfo.phone &&
+			checkoutInfo.postal_code
+		) {
+			handlePostAddress();
+			handlePostCheckOut();
+		} else {
+			console.log("Missing shipping information");
+			alert("Please provide shipping information");
+			setFailure(true);
+		}
+	};
+	const calculateTotalPrice = () => {
+		if (!carts?.data || !voucher) return 0;
+		return carts.data.reduce((total, item) => {
+			let price = item.product_item.price;
+
+			if (
+				// biome-ignore lint/complexity/useOptionalChain: <explanation>
+				voucher &&
+				voucher.products &&
+				voucher.products.some(
+					(product) =>
+						(product as { id: number }).id === item.product_item.product.id,
+				)
+			) {
+				price =
+					voucher.type === "percentage"
+						? item.product_item.price * (1 - voucher.amount)
+						: item.product_item.price - voucher.amount;
+			}
+			return total + price * item.quantity;
+		}, 0);
+	};
+	const calculateTotal = () => {
+		if (!carts?.data) return 0;
+		return carts.data.reduce((total, item) => {
+			return total + item.product_item.price * item.quantity;
+		}, 0);
 	};
 	return (
 		<>
@@ -80,7 +137,7 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 			)}
 			{postFailure && (
 				<>
-					<Failure handleMessage={handleMessage} />
+					<Failure message="Checkout" handleMessage={handleMessage} />
 				</>
 			)}
 			<div className="text-center max-lg:hidden">
@@ -150,14 +207,6 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 							onClick={handleConfirmPayment}
 						>
 							Confirm payment{" "}
-							{carts?.data
-								.reduce(
-									(total, item) =>
-										total + item.product_item.price * item.quantity,
-									0,
-								)
-								.toLocaleString()}
-							đ
 						</button>
 					</div>
 				</div>
@@ -235,9 +284,27 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 												{item.product_item.name}{" "}
 											</td>
 											<td className="text-right text-gray-700">
-												{(
-													item.product_item.price * item.quantity
-												).toLocaleString()}{" "}
+												{
+													// Check if voucher is applied
+													// biome-ignore lint/complexity/useOptionalChain: <explanation>
+													(voucher &&
+													voucher.products &&
+													voucher.products.some(
+														(product) =>
+															(product as { id: number }).id ===
+															item.product_item.product.id,
+													)
+														? // Calculate price after discount
+															voucher.type === "percentage"
+															? item.product_item.price *
+																(1 - voucher.amount) *
+																item.quantity // Percentage discount
+															: item.product_item.price * item.quantity -
+																voucher.amount // Fixed amount discount
+														: // If voucher not applied, display original price
+															item.product_item.price * item.quantity
+													).toLocaleString()
+												}{" "}
 												đ
 											</td>
 										</tr>
@@ -247,13 +314,9 @@ export default function CheckOutForm({ carts }: CartItemProps) {
 									<tr>
 										<td className="text-left font-bold text-gray-700">Total</td>
 										<td className="text-right font-bold text-gray-700">
-											{carts?.data
-												.reduce(
-													(total, item) =>
-														total + item.product_item.price * item.quantity,
-													0,
-												)
-												.toLocaleString()}
+											{voucher
+												? calculateTotalPrice().toLocaleString()
+												: calculateTotal().toLocaleString()}
 											đ
 										</td>
 									</tr>

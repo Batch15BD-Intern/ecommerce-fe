@@ -3,7 +3,13 @@
 import { URL_API } from "../types";
 export function PostCheckOut(
 	jwt: string,
-	orderData: { quantity: number; product_item: number; price: number }[],
+	// discount_code: number,
+	orderData: {
+		quantity: number;
+		product_item: number;
+		price: number;
+		discount_code: number;
+	}[],
 ) {
 	if (jwt === undefined) return;
 
